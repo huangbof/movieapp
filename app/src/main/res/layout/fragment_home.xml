@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgRoot">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- Banner phim nổi bật -->
+            <FrameLayout
+                android:id="@+id/heroContainer"
+                android:layout_width="match_parent"
+                android:layout_height="260dp">
+
+                <ImageView
+                    android:id="@+id/imgHeroBackdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bgCard"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient_hero_scrim" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvHeroTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:shadowColor="#AA000000"
+                        android:shadowDy="2"
+                        android:shadowRadius="4"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btnPlay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_btn_play"
+                            android:paddingStart="22dp"
+                            android:paddingTop="9dp"
+                            android:paddingEnd="22dp"
+                            android:paddingBottom="9dp"
+                            android:text="▶  Xem ngay"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/bg_btn_info"
+                            android:paddingStart="22dp"
+                            android:paddingTop="9dp"
+                            android:paddingEnd="22dp"
+                            android:paddingBottom="9dp"
+                            android:text="ⓘ  Chi tiết"
+                            android:textColor="@color/textPrimary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Các hàng danh mục: Thịnh hành, Đề cử, Đang chiếu, Sắp chiếu... -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+</FrameLayout>

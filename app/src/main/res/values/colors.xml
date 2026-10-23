@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bảng màu phong cách Netflix / FPT Play: nền đen, đỏ làm điểm nhấn -->
+    <color name="bgRoot">#0A0A0A</color>
+    <color name="bgCard">#1F1F1F</color>
+    <color name="colorPrimary">#141414</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#E50914</color>
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textMuted">#B3B3B3</color>
+    <color name="white">#FFFFFF</color>
+</resources>

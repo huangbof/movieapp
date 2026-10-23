@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgRoot">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="14dp"
+            android:background="@color/bgCard"
+            android:gravity="center"
+            android:text="👤"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:textColor="@color/textPrimary"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_info"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Đăng xuất"
+            android:textColor="@color/textPrimary"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</FrameLayout>

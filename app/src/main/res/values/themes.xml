@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Uneti" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/bgRoot</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
+</resources>
