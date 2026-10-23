@@ -2,6 +2,29 @@
 
 Ứng dụng xem phim trên Android (Java), giao diện lấy cảm hứng từ Netflix / FPT
 
+## Tính năng
+
+| Màn hình | Mô tả |
+|---|---|
+| 🔐 Đăng nhập / Đăng ký | Tạo tài khoản & đăng nhập, lưu cục bộ (SharedPreferences) |
+| 🏠 Trang chủ | Banner phim nổi bật + các hàng phim cuộn ngang theo danh mục (Thịnh hành, Đề cử, Đang chiếu, Sắp chiếu) |
+| 🔍 Tìm kiếm | Tìm phim theo tên qua endpoint `search/movie` |
+| 🎞️ Chi tiết phim | Poster/backdrop, mô tả, thể loại, xem trailer (mở YouTube), thêm/xoá Yêu thích |
+| 🤖 Trợ lý AI (Chatbox) | Hỏi đáp / gợi ý phim bằng **Claude API** — chỉ hiện khi đã đăng nhập |
+| ❤️ Yêu thích | Danh sách phim đã lưu, đọc/ghi bằng Room (SQLite) |
+| 👤 Cá nhân | Xem tài khoản đang đăng nhập, đăng xuất |
+
+## Công nghệ sử dụng
+
+- **Ngôn ngữ:** Java
+- **Kiến trúc UI:** 1 Activity khởi đầu (Login) + MainActivity chứa
+  `BottomNavigationView` hoán đổi Fragment
+- **Mạng:** Retrofit2 + Gson (gọi [TMDB API](https://www.themoviedb.org/documentation/api)
+  và [Claude API](https://docs.claude.com))
+- **Ảnh:** Glide
+- **Lưu trữ cục bộ:** Room (SQLite) cho Yêu thích, SharedPreferences cho tài khoản
+- **Build:** Gradle (Groovy DSL), AGP 8.1.4
+
 ## Cấu trúc project
 
 ```
