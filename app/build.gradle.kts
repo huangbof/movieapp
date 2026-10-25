@@ -31,6 +31,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,6 +49,9 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
+
+    // Login with google
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)

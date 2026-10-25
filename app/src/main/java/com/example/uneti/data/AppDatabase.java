@@ -7,15 +7,15 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 /**
- * Cơ sở dữ liệu Room cục bộ của ứng dụng, hiện chỉ chứa bảng phim yêu thích.
- * Có thể mở rộng thêm bảng (lịch sử xem, đánh giá cá nhân...) ở các bước sau.
+ * Cơ sở dữ liệu Room cục bộ của ứng dụng, chứa bảng phim yêu thích và phim tùy chỉnh do Admin quản lý.
  */
-@Database(entities = {FavoriteMovie.class}, version = 1, exportSchema = false)
+@Database(entities = {FavoriteMovie.class, CustomMovie.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase instance;
 
     public abstract FavoriteDao favoriteDao();
+    public abstract CustomMovieDao customMovieDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
         if (instance == null) {
@@ -23,7 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     context.getApplicationContext(),
                     AppDatabase.class,
                     "movie_app_db"
-            ).build();
+            ).fallbackToDestructiveMigration().build();
         }
         return instance;
     }

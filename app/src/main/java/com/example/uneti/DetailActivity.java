@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.uneti.data.AppDatabase;
+import com.example.uneti.data.CustomMovie;
 import com.example.uneti.data.FavoriteDao;
 import com.example.uneti.data.FavoriteMovie;
 import com.example.uneti.model.Genre;
@@ -46,11 +47,12 @@ public class DetailActivity extends AppCompatActivity {
     private String trailerKey;
     private boolean isFavorite = false;
     private MovieDetail currentDetail;
+    private CustomMovie currentCustomMovie;
 
     private FavoriteDao favoriteDao;
 
     private ImageView imgBackdrop;
-    private TextView tvTitle, tvMeta, tvOverview, btnPlayTrailer, btnFavorite;
+    private TextView tvTitle, tvMeta, tvOverview, btnPlayTrailer, btnFavorite, btnShare;
     private ProgressBar progressBar;
 
     @Override
@@ -72,11 +74,13 @@ public class DetailActivity extends AppCompatActivity {
         tvOverview = findViewById(R.id.tvOverview);
         btnPlayTrailer = findViewById(R.id.btnPlayTrailer);
         btnFavorite = findViewById(R.id.btnFavorite);
+        btnShare = findViewById(R.id.btnShare);
         progressBar = findViewById(R.id.progressBar);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         btnPlayTrailer.setOnClickListener(v -> openTrailer());
         btnFavorite.setOnClickListener(v -> toggleFavorite());
+        btnShare.setOnClickListener(v -> shareMovie());
 
         loadDetail();
         loadVideos();
@@ -85,7 +89,22 @@ public class DetailActivity extends AppCompatActivity {
 
     private void loadDetail() {
         progressBar.setVisibility(View.VISIBLE);
-        ApiClient.getApi().getMovieDetail(movieId, Constants.API_KEY, "vi-VN")
+        executor.execute(() -> {
+            CustomMovie custom = AppDatabase.getInstance(this).customMovieDao().findById(movieId);
+            if (custom != null) {
+                currentCustomMovie = custom;
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.GONE);
+                    bindCustomDetail(custom);
+                });
+            } else {
+                runOnUiThread(this::loadDetailFromTmdb);
+            }
+        });
+    }
+
+    private void loadDetailFromTmdb() {
+        ApiClient.getApi().getMovieDetail(movieId, Constants.getApiKey(this), "vi-VN")
                 .enqueue(new Callback<MovieDetail>() {
                     @Override
                     public void onResponse(@NonNull Call<MovieDetail> call,
@@ -104,6 +123,32 @@ public class DetailActivity extends AppCompatActivity {
                         showLoadError();
                     }
                 });
+    }
+
+    private void bindCustomDetail(CustomMovie custom) {
+        tvTitle.setText(custom.getTitle());
+
+        StringBuilder meta = new StringBuilder();
+        if (custom.getReleaseDate() != null && !custom.getReleaseDate().isEmpty()) {
+            meta.append(custom.getReleaseDate());
+        }
+        meta.append(meta.length() > 0 ? "  ·  " : "").append("★ ").append(String.format("%.1f", custom.getVoteAverage()));
+        if (custom.getCategory() != null && !custom.getCategory().isEmpty()) {
+            meta.append("  ·  ").append(custom.getCategory());
+        }
+        tvMeta.setText(meta.toString());
+
+        tvOverview.setText(custom.getOverview() == null || custom.getOverview().isEmpty()
+                ? "Chưa có mô tả cho phim này." : custom.getOverview());
+
+        trailerKey = custom.getVideoKey();
+
+        String backdrop = custom.getBackdropPath();
+        if (backdrop == null || backdrop.isEmpty()) backdrop = custom.getPosterPath();
+        String backdropUrl = (backdrop != null && (backdrop.startsWith("http://") || backdrop.startsWith("https://")))
+                ? backdrop : (Constants.IMAGE_BASE_URL + backdrop);
+
+        Glide.with(this).load(backdropUrl).into(imgBackdrop);
     }
 
     private void bindDetail(MovieDetail detail) {
@@ -141,7 +186,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void loadVideos() {
-        ApiClient.getApi().getMovieVideos(movieId, Constants.API_KEY)
+        ApiClient.getApi().getMovieVideos(movieId, Constants.getApiKey(this))
                 .enqueue(new Callback<VideoResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<VideoResponse> call,
@@ -175,8 +220,11 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Chưa tìm thấy trailer cho phim này.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://www.youtube.com/watch?v=" + trailerKey));
+        Intent intent = new Intent(this, TrailerPlayerActivity.class);
+        intent.putExtra(TrailerPlayerActivity.EXTRA_VIDEO_KEY, trailerKey);
+        String title = currentDetail != null ? currentDetail.getTitle()
+                : (currentCustomMovie != null ? currentCustomMovie.getTitle() : "Trailer");
+        intent.putExtra(TrailerPlayerActivity.EXTRA_MOVIE_TITLE, title);
         startActivity(intent);
     }
 
@@ -201,6 +249,13 @@ public class DetailActivity extends AppCompatActivity {
                         currentDetail.getPosterPath(),
                         currentDetail.getVoteAverage()));
                 isFavorite = true;
+            } else if (currentCustomMovie != null) {
+                favoriteDao.insert(new FavoriteMovie(
+                        movieId,
+                        currentCustomMovie.getTitle(),
+                        currentCustomMovie.getPosterPath(),
+                        currentCustomMovie.getVoteAverage()));
+                isFavorite = true;
             }
             runOnUiThread(this::updateFavoriteButton);
         });
@@ -208,6 +263,22 @@ public class DetailActivity extends AppCompatActivity {
 
     private void updateFavoriteButton() {
         btnFavorite.setText(isFavorite ? "♥  Đã thích" : "♡  Yêu thích");
+    }
+
+    private void shareMovie() {
+        String title = currentDetail != null ? currentDetail.getTitle()
+                : (currentCustomMovie != null ? currentCustomMovie.getTitle() : null);
+        if (title == null) return;
+        double rating = currentDetail != null ? currentDetail.getVoteAverage()
+                : (currentCustomMovie != null ? currentCustomMovie.getVoteAverage() : 0);
+
+        String shareText = "🎬 " + title
+                + "\n⭐ " + String.format("%.1f", rating)
+                + "\n\nXem thêm trên Nitflex!";
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        startActivity(Intent.createChooser(shareIntent, "Chia sẻ phim qua..."));
     }
 
     private void showLoadError() {

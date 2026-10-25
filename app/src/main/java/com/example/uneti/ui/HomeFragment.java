@@ -20,6 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.uneti.DetailActivity;
 import com.example.uneti.R;
+import com.example.uneti.TrailerPlayerActivity;
+import com.example.uneti.auth.SessionManager;
+import com.example.uneti.data.AppDatabase;
+import com.example.uneti.data.CustomMovie;
 import com.example.uneti.adapter.CategoryAdapter;
 import com.example.uneti.model.Movie;
 import com.example.uneti.model.MovieCategory;
@@ -51,6 +55,9 @@ public class HomeFragment extends Fragment {
     private TextView tvHeroTitle;
     private RecyclerView recyclerViewCategories;
     private ProgressBar progressBar;
+    private View layoutAnnouncement;
+    private TextView tvAnnouncement;
+    private SessionManager sessionManager;
 
     private final List<MovieCategory> categories = new ArrayList<>();
     private int pendingRequests = 0;
@@ -77,8 +84,36 @@ public class HomeFragment extends Fragment {
         btnPlay.setOnClickListener(v -> playHeroTrailer());
         btnInfo.setOnClickListener(v -> openHeroDetail());
 
+        sessionManager = new SessionManager(requireContext());
+        layoutAnnouncement = view.findViewById(R.id.layoutAnnouncement);
+        tvAnnouncement = view.findViewById(R.id.tvAnnouncement);
+        View btnClose = view.findViewById(R.id.btnCloseAnnouncement);
+        if (btnClose != null) {
+            btnClose.setOnClickListener(v -> {
+                if (layoutAnnouncement != null) layoutAnnouncement.setVisibility(View.GONE);
+            });
+        }
+        checkAnnouncement();
+
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
         loadHomeData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkAnnouncement();
+    }
+
+    private void checkAnnouncement() {
+        if (sessionManager == null || layoutAnnouncement == null) return;
+        String ann = sessionManager.getAnnouncement();
+        if (ann != null && !ann.trim().isEmpty()) {
+            tvAnnouncement.setText("📢 " + ann.trim());
+            layoutAnnouncement.setVisibility(View.VISIBLE);
+        } else {
+            layoutAnnouncement.setVisibility(View.GONE);
+        }
     }
 
     private void loadHomeData() {
@@ -94,10 +129,11 @@ public class HomeFragment extends Fragment {
 
         pendingRequests = categories.size();
 
-        fetchInto(0, ApiClient.getApi().getPopularMovies(Constants.API_KEY, LANGUAGE, 1));
-        fetchInto(1, ApiClient.getApi().getTopRatedMovies(Constants.API_KEY, LANGUAGE, 1));
-        fetchInto(2, ApiClient.getApi().getNowPlayingMovies(Constants.API_KEY, LANGUAGE, 1));
-        fetchInto(3, ApiClient.getApi().getUpcomingMovies(Constants.API_KEY, LANGUAGE, 1));
+        String apiKey = Constants.getApiKey(getContext());
+        fetchInto(0, ApiClient.getApi().getPopularMovies(apiKey, LANGUAGE, 1));
+        fetchInto(1, ApiClient.getApi().getTopRatedMovies(apiKey, LANGUAGE, 1));
+        fetchInto(2, ApiClient.getApi().getNowPlayingMovies(apiKey, LANGUAGE, 1));
+        fetchInto(3, ApiClient.getApi().getUpcomingMovies(apiKey, LANGUAGE, 1));
     }
 
     private void fetchInto(int slotIndex, Call<MovieResponse> call) {
@@ -143,7 +179,7 @@ public class HomeFragment extends Fragment {
 
     private void playHeroTrailer() {
         if (heroMovieId == -1 || getContext() == null) return;
-        ApiClient.getApi().getMovieVideos(heroMovieId, Constants.API_KEY)
+        ApiClient.getApi().getMovieVideos(heroMovieId, Constants.getApiKey(getContext()))
                 .enqueue(new Callback<VideoResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<VideoResponse> call,
@@ -158,8 +194,11 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         if (key != null && getContext() != null) {
-                            startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.youtube.com/watch?v=" + key)));
+                            Intent intent = new Intent(getContext(), TrailerPlayerActivity.class);
+                            intent.putExtra(TrailerPlayerActivity.EXTRA_VIDEO_KEY, key);
+                            intent.putExtra(TrailerPlayerActivity.EXTRA_MOVIE_TITLE,
+                                    tvHeroTitle != null ? tvHeroTitle.getText().toString() : "Trailer");
+                            startActivity(intent);
                         } else if (getContext() != null) {
                             Toast.makeText(getContext(), "Chưa tìm thấy trailer cho phim này.",
                                     Toast.LENGTH_SHORT).show();
@@ -179,21 +218,35 @@ public class HomeFragment extends Fragment {
     private void onOneRequestDone() {
         pendingRequests--;
         if (pendingRequests <= 0) {
-            progressBar.setVisibility(View.GONE);
-            recyclerViewCategories.setAdapter(new CategoryAdapter(categories));
+            if (getContext() == null) return;
+            java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                List<CustomMovie> customList = AppDatabase.getInstance(requireContext()).customMovieDao().getAll();
+                if (getActivity() == null) return;
+                getActivity().runOnUiThread(() -> {
+                    if (customList != null && !customList.isEmpty()) {
+                        List<Movie> customMovies = new ArrayList<>();
+                        for (CustomMovie cm : customList) {
+                            customMovies.add(cm.toMovie());
+                        }
+                        categories.add(0, new MovieCategory("⭐ Phim Độc Quyền Nitflex", customMovies));
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    recyclerViewCategories.setAdapter(new CategoryAdapter(categories));
 
-            boolean allEmpty = true;
-            for (MovieCategory c : categories) {
-                if (!c.getMovies().isEmpty()) {
-                    allEmpty = false;
-                    break;
-                }
-            }
-            if (allEmpty && getContext() != null) {
-                Toast.makeText(getContext(),
-                        "Không tải được dữ liệu phim. Kiểm tra API Key (Constants.java) hoặc kết nối mạng.",
-                        Toast.LENGTH_LONG).show();
-            }
+                    boolean allEmpty = true;
+                    for (MovieCategory c : categories) {
+                        if (!c.getMovies().isEmpty()) {
+                            allEmpty = false;
+                            break;
+                        }
+                    }
+                    if (allEmpty && getContext() != null) {
+                        Toast.makeText(getContext(),
+                                "Không tải được dữ liệu phim. Kiểm tra API Key (Constants.java) hoặc kết nối mạng.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            });
         }
     }
 }

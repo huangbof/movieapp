@@ -46,7 +46,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         holder.tvTitle.setText(movie.getTitle());
         holder.tvRating.setText(String.format("★ %.1f", movie.getVoteAverage()));
 
-        String posterUrl = Constants.IMAGE_BASE_URL + movie.getPosterPath();
+        String posterPath = movie.getPosterPath();
+        String posterUrl = (posterPath != null && (posterPath.startsWith("http://") || posterPath.startsWith("https://")))
+                ? posterPath : (Constants.IMAGE_BASE_URL + posterPath);
         Glide.with(holder.itemView.getContext())
                 .load(posterUrl)
                 .placeholder(R.drawable.ic_launcher)

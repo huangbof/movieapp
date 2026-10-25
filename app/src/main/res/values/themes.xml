@@ -6,4 +6,11 @@
         <item name="android:windowBackground">@color/bgRoot</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
+
+    <!-- Theme cho Splash (ẩn ActionBar, nền đen) -->
+    <style name="Theme.Uneti.Splash" parent="Theme.Uneti">
+        <item name="android:windowBackground">@color/bgRoot</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
 </resources>

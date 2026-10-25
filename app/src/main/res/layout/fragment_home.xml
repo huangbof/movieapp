@@ -15,6 +15,36 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
+            <!-- Thanh thông báo hệ thống từ Admin (nếu có) -->
+            <LinearLayout
+                android:id="@+id/layoutAnnouncement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#33E50914"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAnnouncement"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#FFD1D4"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/btnCloseAnnouncement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:text="✕"
+                    android:textColor="#FFD1D4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <!-- Banner phim nổi bật -->
             <FrameLayout
                 android:id="@+id/heroContainer"

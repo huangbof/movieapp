@@ -19,9 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uneti.R;
 import com.example.uneti.adapter.MovieAdapter;
+import com.example.uneti.data.AppDatabase;
+import com.example.uneti.data.CustomMovie;
+import com.example.uneti.model.Movie;
 import com.example.uneti.model.MovieResponse;
 import com.example.uneti.network.ApiClient;
 import com.example.uneti.network.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,27 +81,48 @@ public class SearchFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         tvEmpty.setVisibility(View.GONE);
 
-        ApiClient.getApi().searchMovies(Constants.API_KEY, "vi-VN", query, 1)
+        ApiClient.getApi().searchMovies(Constants.getApiKey(getContext()), "vi-VN", query, 1)
                 .enqueue(new Callback<MovieResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MovieResponse> call,
                                             @NonNull Response<MovieResponse> response) {
                         progressBar.setVisibility(View.GONE);
+                        List<Movie> results = new ArrayList<>();
                         if (response.isSuccessful() && response.body() != null
-                                && response.body().getResults() != null
-                                && !response.body().getResults().isEmpty()) {
-                            recyclerView.setAdapter(new MovieAdapter(response.body().getResults()));
-                        } else {
-                            showEmpty("Không tìm thấy phim phù hợp với \"" + query + "\".");
+                                && response.body().getResults() != null) {
+                            results.addAll(response.body().getResults());
                         }
+                        mergeLocalAndShow(query, results);
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
                         progressBar.setVisibility(View.GONE);
-                        showEmpty("Có lỗi khi tìm kiếm. Kiểm tra kết nối mạng và thử lại.");
+                        mergeLocalAndShow(query, new ArrayList<>());
                     }
                 });
+    }
+
+    private void mergeLocalAndShow(String query, List<Movie> tmdbResults) {
+        if (getContext() == null) return;
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<CustomMovie> localList = AppDatabase.getInstance(requireContext()).customMovieDao().searchByTitle(query);
+            List<Movie> finalList = new ArrayList<>();
+            if (localList != null) {
+                for (CustomMovie cm : localList) {
+                    finalList.add(cm.toMovie());
+                }
+            }
+            finalList.addAll(tmdbResults);
+            if (getActivity() == null) return;
+            getActivity().runOnUiThread(() -> {
+                if (!finalList.isEmpty()) {
+                    recyclerView.setAdapter(new MovieAdapter(finalList));
+                } else {
+                    showEmpty("Không tìm thấy phim phù hợp với \"" + query + "\".");
+                }
+            });
+        });
     }
 
     private void showEmpty(String message) {

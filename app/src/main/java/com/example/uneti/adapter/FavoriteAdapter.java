@@ -42,8 +42,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.tvTitle.setText(movie.getTitle());
         holder.tvRating.setText(String.format("★ %.1f", movie.getVoteAverage()));
 
+        String posterPath = movie.getPosterPath();
+        String posterUrl = (posterPath != null && (posterPath.startsWith("http://") || posterPath.startsWith("https://")))
+                ? posterPath : (Constants.IMAGE_BASE_URL + posterPath);
+
         Glide.with(holder.itemView.getContext())
-                .load(Constants.IMAGE_BASE_URL + movie.getPosterPath())
+                .load(posterUrl)
                 .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.ic_launcher)
                 .into(holder.imgPoster);

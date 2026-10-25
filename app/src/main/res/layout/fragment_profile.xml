@@ -30,6 +30,46 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
+        <!-- Dark Mode toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn_info"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🌙  Chế độ tối"
+                android:textColor="@color/textPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchDarkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!-- Nút mở Bảng điều khiển Quản trị viên (chỉ hiện khi là Admin) -->
+        <TextView
+            android:id="@+id/btnAdminPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn_play"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="⚙️ Quản trị viên (Admin Panel)"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"

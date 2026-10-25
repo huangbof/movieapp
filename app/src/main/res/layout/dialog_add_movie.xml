@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgCard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tvDialogMovieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Thêm phim mới"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Tên phim -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên phim (*)"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:background="#2E2E2E"
+            android:hint="Ví dụ: Đất Rừng Phương Nam"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <!-- Danh mục / Thể loại -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Danh mục / Thể loại"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etDialogCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:background="#2E2E2E"
+            android:hint="Ví dụ: Hành Động, Chiếu Rạp, Độc Quyền"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <!-- Điểm và Năm phát hành -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Điểm đánh giá (0-10)"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/etDialogRating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="#2E2E2E"
+                    android:hint="8.5"
+                    android:inputType="numberDecimal"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/textMuted"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Năm phát hành"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/etDialogYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="#2E2E2E"
+                    android:hint="2024"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/textMuted"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Link Trailer YouTube -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã / Link Trailer YouTube"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etDialogTrailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:background="#2E2E2E"
+            android:hint="Nhập link hoặc mã: e.g. dQw4w9WgXcQ"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <!-- Link Ảnh Poster -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link ảnh Poster (URL online)"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etDialogPoster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:background="#2E2E2E"
+            android:hint="https://link-anh.com/poster.jpg"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <!-- Mô tả nội dung phim -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mô tả tóm tắt nội dung phim"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/etDialogOverview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:background="#2E2E2E"
+            android:hint="Nhập tóm tắt kịch bản phim..."
+            android:minLines="3"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <!-- Nút bấm -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnDialogCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_info"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Hủy"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnDialogSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_play"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Lưu phim"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

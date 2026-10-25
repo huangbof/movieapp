@@ -11,7 +11,17 @@ package com.example.uneti.network;
 public class Constants {
 
     // TODO: THAY GIÁ TRỊ NÀY bằng API Key TMDB thật của bạn
-    public static final String API_KEY = "YOUR_TMDB_API_KEY";
+    public static final String API_KEY = "2f20d15c74d91fe94fa8b289974504cd";
+
+    public static String getApiKey(android.content.Context context) {
+        if (context != null) {
+            String custom = new com.example.uneti.auth.SessionManager(context).getCustomApiKey();
+            if (custom != null && !custom.trim().isEmpty()) {
+                return custom.trim();
+            }
+        }
+        return API_KEY;
+    }
 
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
 
