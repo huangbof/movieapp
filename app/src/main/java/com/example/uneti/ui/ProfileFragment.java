@@ -70,15 +70,21 @@ public class ProfileFragment extends Fragment {
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
-                GoogleSignIn.getClient(requireContext(), gso).signOut();
-            } catch (Exception ignored) {
-            }
-
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            if (getActivity() != null) {
-                getActivity().finish();
+                GoogleSignIn.getClient(requireContext(), gso).signOut().addOnCompleteListener(task -> {
+                    if (isAdded() && getActivity() != null) {
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                });
+            } catch (Exception e) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
             }
         });
     }

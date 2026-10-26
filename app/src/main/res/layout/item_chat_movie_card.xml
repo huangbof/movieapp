@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="145dp">
+
+        <ImageView
+            android:id="@+id/imgMoviePoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#1A1A1A"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tvMovieRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="4dp"
+            android:background="#D9000000"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:text="★ 8.2"
+            android:textColor="#FFD700"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvMovieTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="Movie Title"
+        android:textColor="@color/textPrimary"
+        android:textSize="11.5sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

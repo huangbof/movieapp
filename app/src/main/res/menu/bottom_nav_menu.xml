@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_search"
         android:title="Tìm kiếm" />
     <item
+        android:id="@+id/nav_ai"
+        android:icon="@drawable/ic_ai_chat"
+        android:title="Trợ lý AI" />
+    <item
         android:id="@+id/nav_favorite"
         android:icon="@drawable/ic_favorite"
         android:title="Yêu thích" />

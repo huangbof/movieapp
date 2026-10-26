@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.uneti.auth.SessionManager;
+import com.example.uneti.ui.AiChatFragment;
 import com.example.uneti.ui.FavoriteFragment;
 import com.example.uneti.ui.HomeFragment;
 import com.example.uneti.ui.ProfileFragment;
@@ -50,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (id == R.id.nav_search) {
                 openFragment(new SearchFragment());
+                return true;
+
+            } else if (id == R.id.nav_ai) {
+                openFragment(new AiChatFragment());
                 return true;
 
             } else if (id == R.id.nav_favorite) {

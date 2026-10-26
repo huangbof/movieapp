@@ -84,6 +84,19 @@ public class HomeFragment extends Fragment {
         btnPlay.setOnClickListener(v -> playHeroTrailer());
         btnInfo.setOnClickListener(v -> openHeroDetail());
 
+        View btnOpenAiChat = view.findViewById(R.id.btnOpenAiChat);
+        if (btnOpenAiChat != null) {
+            btnOpenAiChat.setOnClickListener(v -> {
+                if (getActivity() != null) {
+                    com.google.android.material.bottomnavigation.BottomNavigationView nav =
+                            getActivity().findViewById(R.id.bottomNavigation);
+                    if (nav != null) {
+                        nav.setSelectedItemId(R.id.nav_ai);
+                    }
+                }
+            });
+        }
+
         sessionManager = new SessionManager(requireContext());
         layoutAnnouncement = view.findViewById(R.id.layoutAnnouncement);
         tvAnnouncement = view.findViewById(R.id.tvAnnouncement);

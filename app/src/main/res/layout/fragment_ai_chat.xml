@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgRoot"
+    android:orientation="vertical">
+
+    <!-- Header bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_chat_ai"
+            android:gravity="center"
+            android:text="🤖"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trợ lý AI Nitflex"
+                android:textColor="@color/textPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAiStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● Sẵn sàng tư vấn phim 24/7"
+                android:textColor="#4CAF50"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnClearChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="6dp"
+            android:text="Xoá chat"
+            android:textColor="@color/textMuted"
+            android:textSize="12.5sp" />
+    </LinearLayout>
+
+    <!-- Chat Message List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingVertical="8dp" />
+
+    <!-- Suggestion Chips -->
+    <HorizontalScrollView
+        android:id="@+id/scrollChips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layoutChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chipToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="🍿 Hôm nay xem gì hay?"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="💥 Gợi ý phim hành động đỉnh"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="👻 Phim kinh dị rùng rợn"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipRomance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="💖 Phim tình cảm lãng mạn"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipComedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="😂 Phim hài xả stress"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipExclusive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="⭐ Phim độc quyền Nitflex"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipTopRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:text="🏆 Top phim điểm cao"
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Bottom Input Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <EditText
+            android:id="@+id/etInputMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_chat_ai"
+            android:hint="Hỏi AI về phim, thể loại, diễn viên..."
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="3"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textMuted"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/btnSendMessage"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_play"
+            android:contentDescription="Gửi tin nhắn"
+            android:padding="10dp"
+            android:src="@drawable/ic_send" />
+
+    </LinearLayout>
+
+</LinearLayout>

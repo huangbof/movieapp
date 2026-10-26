@@ -22,6 +22,7 @@ public class SessionManager {
     private static final String KEY_USERS = "users_json";
     private static final String KEY_LOGGED_IN_USER = "logged_in_user";
     private static final String KEY_CUSTOM_API_KEY = "custom_api_key";
+    private static final String KEY_GEMINI_API_KEY = "gemini_api_key";
     private static final String KEY_ANNOUNCEMENT = "system_announcement";
 
     private final SharedPreferences prefs;
@@ -171,6 +172,19 @@ public class SessionManager {
             prefs.edit().remove(KEY_CUSTOM_API_KEY).apply();
         } else {
             prefs.edit().putString(KEY_CUSTOM_API_KEY, key.trim()).apply();
+        }
+    }
+
+    /** Quản lý API Key Gemini AI (tuỳ chọn) */
+    public String getGeminiApiKey() {
+        return prefs.getString(KEY_GEMINI_API_KEY, null);
+    }
+
+    public void setGeminiApiKey(String key) {
+        if (key == null || key.trim().isEmpty()) {
+            prefs.edit().remove(KEY_GEMINI_API_KEY).apply();
+        } else {
+            prefs.edit().putString(KEY_GEMINI_API_KEY, key.trim()).apply();
         }
     }
 

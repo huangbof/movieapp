@@ -49,7 +49,7 @@ public class AdminActivity extends AppCompatActivity {
     private TextView tvStatCustomMovies, tvNoCustomMovies;
 
     private TextView tvStatUsers, tvStatFavorites;
-    private EditText etAnnouncement, etApiKey;
+    private EditText etAnnouncement, etApiKey, etGeminiKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class AdminActivity extends AppCompatActivity {
         tvNoCustomMovies = findViewById(R.id.tvNoCustomMovies);
         etAnnouncement = findViewById(R.id.etAnnouncement);
         etApiKey = findViewById(R.id.etApiKey);
+        etGeminiKey = findViewById(R.id.etGeminiKey);
 
         // 1. Setup RecyclerView Người dùng
         rvUsers = findViewById(R.id.rvUsers);
@@ -110,6 +111,7 @@ public class AdminActivity extends AppCompatActivity {
         findViewById(R.id.btnSaveAnnouncement).setOnClickListener(v -> saveAnnouncement());
         findViewById(R.id.btnClearAnnouncement).setOnClickListener(v -> clearAnnouncement());
         findViewById(R.id.btnSaveApiKey).setOnClickListener(v -> saveApiKey());
+        findViewById(R.id.btnSaveGeminiKey).setOnClickListener(v -> saveGeminiKey());
 
         loadData();
     }
@@ -144,6 +146,10 @@ public class AdminActivity extends AppCompatActivity {
             activeKey = Constants.API_KEY;
         }
         etApiKey.setText(activeKey);
+
+        // Gemini AI Key hiện tại (nếu có)
+        String geminiKey = sessionManager.getGeminiApiKey();
+        etGeminiKey.setText(geminiKey != null ? geminiKey : "");
     }
 
     // ==========================================
@@ -389,5 +395,15 @@ public class AdminActivity extends AppCompatActivity {
         }
         sessionManager.setCustomApiKey(key);
         Toast.makeText(this, "Đã lưu API Key mới thành công!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void saveGeminiKey() {
+        String key = etGeminiKey.getText().toString().trim();
+        sessionManager.setGeminiApiKey(key);
+        if (key.isEmpty()) {
+            Toast.makeText(this, "Đã xoá Gemini Key. AI sẽ dùng bộ phân tích thông minh Nitflex!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Đã lưu Gemini AI Key thành công!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
