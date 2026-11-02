@@ -27,4 +27,5 @@ public class Constants {
 
     // Kích thước ảnh poster: w200, w300, w500, original...
     public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    public static final String IMAGE_BASE_W500 = IMAGE_BASE_URL;
 }

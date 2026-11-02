@@ -1,5 +1,6 @@
 package com.example.uneti.network;
 
+import com.example.uneti.model.CreditsResponse;
 import com.example.uneti.model.MovieDetail;
 import com.example.uneti.model.MovieResponse;
 import com.example.uneti.model.VideoResponse;
@@ -71,5 +72,12 @@ public interface TmdbApi {
     Call<VideoResponse> getMovieVideos(
             @Path("id") int movieId,
             @Query("api_key") String apiKey
+    );
+
+    @GET("movie/{id}/credits")
+    Call<CreditsResponse> getMovieCredits(
+            @Path("id") int movieId,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
     );
 }

@@ -159,7 +159,7 @@ public class AiChatService {
             if (customs != null && !customs.isEmpty()) {
                 List<Movie> movies = new ArrayList<>();
                 for (CustomMovie cm : customs) {
-                    movies.add(new Movie(cm.getId(), cm.getTitle(), cm.getPosterPath(), cm.getBackdropPath(), cm.getOverview(), cm.getReleaseDate(), cm.getVoteAverage()));
+                    movies.add(cm.toMovie());
                 }
                 return new ChatMessage("⭐ Đây là các bộ phim Độc Quyền Nitflex do ban quản trị phát hành đặc biệt! Bấm vào từng poster để xem nội dung và thưởng thức ngay nhé: 🍿🎬", false, movies);
             } else {

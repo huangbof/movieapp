@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,12 +13,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uneti.adapter.CastAdapter;
+import com.example.uneti.adapter.ReviewAdapter;
+import com.example.uneti.auth.SessionManager;
 import com.example.uneti.data.AppDatabase;
 import com.example.uneti.data.CustomMovie;
 import com.example.uneti.data.FavoriteDao;
 import com.example.uneti.data.FavoriteMovie;
+import com.example.uneti.data.HistoryDao;
+import com.example.uneti.data.HistoryMovie;
+import com.example.uneti.data.MovieReview;
+import com.example.uneti.data.ReviewDao;
+import com.example.uneti.model.CreditsResponse;
 import com.example.uneti.model.Genre;
 import com.example.uneti.model.MovieDetail;
 import com.example.uneti.model.Video;
@@ -34,8 +45,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Màn hình Chi tiết phim: hiển thị thông tin phim, cho phép xem trailer
- * (mở bằng YouTube) và thêm/xoá khỏi danh sách Yêu thích (lưu bằng Room).
+ * Màn hình Chi tiết phim:
+ * - Hiển thị thông tin phim, danh sách diễn viên (Credits)
+ * - Tự động lưu vào Lịch sử xem phim (Room DB)
+ * - Phát trailer qua WebView
+ * - Thêm/xoá phim khỏi Yêu thích (Room DB)
+ * - Đánh giá sao và viết bình luận phim của người dùng (Room DB)
  */
 public class DetailActivity extends AppCompatActivity {
 
@@ -50,10 +65,22 @@ public class DetailActivity extends AppCompatActivity {
     private CustomMovie currentCustomMovie;
 
     private FavoriteDao favoriteDao;
+    private HistoryDao historyDao;
+    private ReviewDao reviewDao;
 
     private ImageView imgBackdrop;
     private TextView tvTitle, tvMeta, tvOverview, btnPlayTrailer, btnFavorite, btnShare;
     private ProgressBar progressBar;
+    private View layoutCast;
+    private RecyclerView rvCast;
+
+    // Review components
+    private final TextView[] starViews = new TextView[5];
+    private int currentRating = 5;
+    private TextView tvSelectedRating, btnSubmitReview, tvEmptyReviews;
+    private EditText etComment;
+    private RecyclerView rvReviews;
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +93,10 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        favoriteDao = AppDatabase.getInstance(this).favoriteDao();
+        AppDatabase db = AppDatabase.getInstance(this);
+        favoriteDao = db.favoriteDao();
+        historyDao = db.historyDao();
+        reviewDao = db.reviewDao();
 
         imgBackdrop = findViewById(R.id.imgBackdrop);
         tvTitle = findViewById(R.id.tvTitle);
@@ -76,15 +106,120 @@ public class DetailActivity extends AppCompatActivity {
         btnFavorite = findViewById(R.id.btnFavorite);
         btnShare = findViewById(R.id.btnShare);
         progressBar = findViewById(R.id.progressBar);
+        layoutCast = findViewById(R.id.layoutCast);
+        rvCast = findViewById(R.id.rvCast);
+        rvCast.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         btnPlayTrailer.setOnClickListener(v -> openTrailer());
         btnFavorite.setOnClickListener(v -> toggleFavorite());
         btnShare.setOnClickListener(v -> shareMovie());
 
+        setupReviewSection();
+
         loadDetail();
         loadVideos();
+        loadCredits();
         checkFavoriteState();
+        loadReviews();
+    }
+
+    private void setupReviewSection() {
+        starViews[0] = findViewById(R.id.star1);
+        starViews[1] = findViewById(R.id.star2);
+        starViews[2] = findViewById(R.id.star3);
+        starViews[3] = findViewById(R.id.star4);
+        starViews[4] = findViewById(R.id.star5);
+
+        tvSelectedRating = findViewById(R.id.tvSelectedRating);
+        etComment = findViewById(R.id.etComment);
+        btnSubmitReview = findViewById(R.id.btnSubmitReview);
+        tvEmptyReviews = findViewById(R.id.tvEmptyReviews);
+        rvReviews = findViewById(R.id.rvReviews);
+
+        rvReviews.setLayoutManager(new LinearLayoutManager(this));
+        reviewAdapter = new ReviewAdapter();
+        rvReviews.setAdapter(reviewAdapter);
+
+        for (int i = 0; i < 5; i++) {
+            final int starIndex = i + 1;
+            starViews[i].setOnClickListener(v -> setStarRating(starIndex));
+        }
+        setStarRating(5);
+
+        btnSubmitReview.setOnClickListener(v -> submitReview());
+    }
+
+    private void setStarRating(int rating) {
+        currentRating = rating;
+        for (int i = 0; i < 5; i++) {
+            if (i < rating) {
+                starViews[i].setText("⭐");
+            } else {
+                starViews[i].setText("☆");
+            }
+        }
+        if (tvSelectedRating != null) {
+            tvSelectedRating.setText(rating + "/5 sao");
+        }
+    }
+
+    private void submitReview() {
+        String comment = etComment.getText().toString().trim();
+        if (comment.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập nội dung đánh giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SessionManager sessionManager = new SessionManager(this);
+        String username = sessionManager.getCurrentUser();
+        if (username == null || username.isEmpty()) {
+            username = "Khách";
+        }
+
+        MovieReview review = new MovieReview(
+                movieId,
+                username,
+                currentRating,
+                comment,
+                System.currentTimeMillis()
+        );
+
+        executor.execute(() -> {
+            reviewDao.insert(review);
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Đã gửi đánh giá thành công!", Toast.LENGTH_SHORT).show();
+                etComment.setText("");
+                setStarRating(5);
+                loadReviews();
+            });
+        });
+    }
+
+    private void loadReviews() {
+        executor.execute(() -> {
+            List<MovieReview> list = reviewDao.getReviewsByMovie(movieId);
+            runOnUiThread(() -> {
+                reviewAdapter.setData(list);
+                if (list.isEmpty()) {
+                    tvEmptyReviews.setVisibility(View.VISIBLE);
+                } else {
+                    tvEmptyReviews.setVisibility(View.GONE);
+                }
+            });
+        });
+    }
+
+    private void saveToHistory(String title, String posterPath, double voteAverage) {
+        executor.execute(() -> {
+            historyDao.insert(new HistoryMovie(
+                    movieId,
+                    title,
+                    posterPath,
+                    voteAverage,
+                    System.currentTimeMillis()
+            ));
+        });
     }
 
     private void loadDetail() {
@@ -149,6 +284,9 @@ public class DetailActivity extends AppCompatActivity {
                 ? backdrop : (Constants.IMAGE_BASE_URL + backdrop);
 
         Glide.with(this).load(backdropUrl).into(imgBackdrop);
+
+        // Lưu vào lịch sử xem
+        saveToHistory(custom.getTitle(), custom.getPosterPath(), custom.getVoteAverage());
     }
 
     private void bindDetail(MovieDetail detail) {
@@ -173,6 +311,9 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(Constants.IMAGE_BASE_URL + detail.getBackdropPath())
                 .into(imgBackdrop);
+
+        // Lưu vào lịch sử xem
+        saveToHistory(detail.getTitle(), detail.getPosterPath(), detail.getVoteAverage());
     }
 
     private String joinGenres(List<Genre> genres) {
@@ -199,7 +340,6 @@ public class DetailActivity extends AppCompatActivity {
                                 return;
                             }
                         }
-                        // Không có "Trailer" chính thức -> lấy video YouTube đầu tiên tìm được
                         for (Video v : response.body().getResults()) {
                             if ("YouTube".equalsIgnoreCase(v.getSite())) {
                                 trailerKey = v.getKey();
@@ -210,7 +350,33 @@ public class DetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NonNull Call<VideoResponse> call, @NonNull Throwable t) {
-                        // Bỏ qua: nút "Xem trailer" sẽ báo chưa tìm thấy nếu bấm vào
+                    }
+                });
+    }
+
+    private void loadCredits() {
+        if (movieId <= 0) return;
+        ApiClient.getApi().getMovieCredits(movieId, Constants.getApiKey(this), "vi-VN")
+                .enqueue(new Callback<CreditsResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<CreditsResponse> call,
+                                           @NonNull Response<CreditsResponse> response) {
+                        if (!response.isSuccessful() || response.body() == null
+                                || response.body().getCast() == null
+                                || response.body().getCast().isEmpty()) return;
+
+                        List<com.example.uneti.model.Cast> castList = response.body().getCast();
+                        int limit = Math.min(castList.size(), 15);
+                        List<com.example.uneti.model.Cast> limitedCast = new java.util.ArrayList<>(castList.subList(0, limit));
+
+                        runOnUiThread(() -> {
+                            rvCast.setAdapter(new CastAdapter(limitedCast));
+                            layoutCast.setVisibility(View.VISIBLE);
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
                     }
                 });
     }

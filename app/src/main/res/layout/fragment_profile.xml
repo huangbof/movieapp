@@ -1,85 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgRoot">
+    android:background="@color/bgRoot"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingBottom="40dp">
 
-        <TextView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginBottom="14dp"
-            android:background="@color/bgCard"
-            android:gravity="center"
-            android:text="👤"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            android:textColor="@color/textPrimary"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <!-- Dark Mode toggle -->
+        <!-- Header Profile với Gradient và Avatar lớn -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_btn_info"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
+            android:background="@drawable/bg_profile_header"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="36dp"
+            android:paddingBottom="24dp"
+            android:paddingHorizontal="20dp">
 
+            <!-- Avatar tròn lớn có viền đỏ nổi bật -->
+            <FrameLayout
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/tvAvatarIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_profile_avatar"
+                    android:gravity="center"
+                    android:text="👤"
+                    android:textSize="44sp" />
+            </FrameLayout>
+
+            <!-- Tên người dùng -->
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="🌙  Chế độ tối"
                 android:textColor="@color/textPrimary"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchDarkMode"
+            <!-- Huy hiệu vai trò (Admin / Member VIP) -->
+            <TextView
+                android:id="@+id/tvRoleBadge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_badge_admin"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="4dp"
+                android:text="👑 Quản trị viên (Admin VIP)"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Email người dùng -->
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/textMuted"
+                android:textSize="12.5sp" />
 
         </LinearLayout>
 
-        <!-- Nút mở Bảng điều khiển Quản trị viên (chỉ hiện khi là Admin) -->
-        <TextView
-            android:id="@+id/btnAdminPanel"
+        <!-- Thống kê nhanh 3 ô ngang: Đã xem, Yêu thích, Đánh giá -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_btn_play"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="⚙️ Quản trị viên (Admin Panel)"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:layout_marginTop="-10dp"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/btnLogout"
+            <!-- Ô 1: Lịch sử xem -->
+            <LinearLayout
+                android:id="@+id/btnStatHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="14dp">
+
+                <TextView
+                    android:id="@+id/tvCountHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="🎬 Đã xem"
+                    android:textColor="@color/textMuted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Ô 2: Yêu thích -->
+            <LinearLayout
+                android:id="@+id/btnStatFavorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/bg_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="14dp">
+
+                <TextView
+                    android:id="@+id/tvCountFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#FFAA00"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="❤️ Yêu thích"
+                    android:textColor="@color/textMuted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Ô 3: Đánh giá -->
+            <LinearLayout
+                android:id="@+id/btnStatReview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_stat_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="14dp">
+
+                <TextView
+                    android:id="@+id/tvCountReview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#00ADB5"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="⭐ Đánh giá"
+                    android:textColor="@color/textMuted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Thân trang: Các nhóm tính năng và cài đặt -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_btn_info"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="Đăng xuất"
-            android:textColor="@color/textPrimary"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:layout_marginTop="20dp">
+
+            <!-- NHÓM 1: HOẠT ĐỘNG PHIM -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HOẠT ĐỘNG CỦA BẠN"
+                android:textColor="@color/textMuted"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Nút Lịch sử xem phim -->
+            <LinearLayout
+                android:id="@+id/btnHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_stat_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🕒"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="Lịch sử xem phim"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textColor="@color/textMuted"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- NHÓM 2: QUẢN TRỊ VIÊN (chỉ hiện khi là Admin) -->
+            <LinearLayout
+                android:id="@+id/layoutAdminSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="QUẢN TRỊ VIÊN"
+                    android:textColor="@color/textMuted"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Bảng điều khiển Quản trị viên -->
+                <LinearLayout
+                    android:id="@+id/btnAdminPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚙️"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="Bảng điều khiển Quản trị (Admin Panel)"
+                        android:textColor="#FFAA00"
+                        android:textSize="14.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textColor="#FFAA00"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Nút ĐĂNG XUẤT -->
+            <TextView
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_stat_card"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="🚪  Đăng xuất tài khoản"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </LinearLayout>
-</FrameLayout>
+</ScrollView>

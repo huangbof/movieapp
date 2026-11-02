@@ -5,6 +5,7 @@
     android:background="@color/bgRoot"
     android:orientation="vertical">
 
+    <!-- Thanh tìm kiếm -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +42,160 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Thanh lọc thể loại (Genre Filter Chips) -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="10dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layoutGenreChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <!-- Chip "Tất cả" -->
+            <TextView
+                android:id="@+id/chipAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_btn_play"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🎬 Tất cả"
+                android:textColor="#000000"
+                android:textSize="12.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chipAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="💥 Hành động"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipComedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="😂 Hài hước"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipHorror"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="👻 Kinh dị"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipRomance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="💖 Tình cảm"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipSciFi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🚀 Viễn tưởng"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipAnimation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🎨 Hoạt hình"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipThriller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🔪 Giật gân"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipDocumentary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🎥 Tài liệu"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+            <TextView
+                android:id="@+id/chipTopRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_chip_prompt"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="🏆 Điểm cao"
+                android:textColor="@color/textPrimary"
+                android:textSize="12.5sp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Tiêu đề kết quả -->
+    <TextView
+        android:id="@+id/tvSearchLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="6dp"
+        android:text="🔥 Phim thịnh hành"
+        android:textColor="@color/textPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <!-- Kết quả tìm kiếm / danh sách phim theo thể loại -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -58,9 +213,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Nhập tên phim để bắt đầu tìm kiếm."
+            android:gravity="center"
+            android:text="Không tìm thấy phim phù hợp."
             android:textColor="@color/textMuted"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progressBar"

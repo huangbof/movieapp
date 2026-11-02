@@ -45,6 +45,11 @@
             android:exported="false"
             android:hardwareAccelerated="true" />
 
+        <!-- Màn hình Lịch sử xem phim -->
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+
         <!-- Màn hình Bảng điều khiển Quản trị viên (Admin Panel) -->
         <activity
             android:name=".AdminActivity"

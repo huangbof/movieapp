@@ -3,6 +3,10 @@ package com.example.uneti.auth;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.uneti.data.AppDatabase;
+import com.example.uneti.data.User;
+import com.example.uneti.data.UserDao;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,21 +15,24 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Quản lý đăng ký/đăng nhập và phân quyền Admin bằng SharedPreferences.
- * Tự động tạo sẵn tài khoản quản trị mặc định:
+ * Quản lý phiên đăng nhập người dùng kết hợp Room Database (bảng users)
+ * và SharedPreferences (lưu token phiên và cấu hình hệ thống).
+ * 
+ * Tự động tạo sẵn tài khoản quản trị mặc định trong Room DB:
  * - Username: admin
  * - Password: admin123
  */
 public class SessionManager {
 
     private static final String PREFS_NAME = "movieapp_session";
-    private static final String KEY_USERS = "users_json";
+    private static final String KEY_USERS_LEGACY = "users_json";
     private static final String KEY_LOGGED_IN_USER = "logged_in_user";
     private static final String KEY_CUSTOM_API_KEY = "custom_api_key";
     private static final String KEY_GEMINI_API_KEY = "gemini_api_key";
     private static final String KEY_ANNOUNCEMENT = "system_announcement";
 
     private final SharedPreferences prefs;
+    private final UserDao userDao;
 
     public static class UserInfo {
         public String username;
@@ -40,17 +47,42 @@ public class SessionManager {
     }
 
     public SessionManager(Context context) {
-        prefs = context.getApplicationContext()
-                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Context appContext = context.getApplicationContext();
+        prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        userDao = AppDatabase.getInstance(appContext).userDao();
+
         initDefaultAdmin();
+        migrateLegacyUsersFromPrefs();
     }
 
     private void initDefaultAdmin() {
-        JSONObject users = getUsers();
-        if (!users.has("admin")) {
+        try {
+            if (userDao.findByUsername("admin") == null) {
+                userDao.insert(new User("admin", "admin123", true, System.currentTimeMillis()));
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * Chuyển đổi dữ liệu tài khoản cũ từ SharedPreferences (nếu có) sang Room Database.
+     */
+    private void migrateLegacyUsersFromPrefs() {
+        String legacyJson = prefs.getString(KEY_USERS_LEGACY, null);
+        if (legacyJson != null && !legacyJson.isEmpty()) {
             try {
-                users.put("admin", "admin123");
-                prefs.edit().putString(KEY_USERS, users.toString()).apply();
+                JSONObject json = new JSONObject(legacyJson);
+                Iterator<String> keys = json.keys();
+                while (keys.hasNext()) {
+                    String uname = keys.next();
+                    String pwd = json.optString(uname, "123456");
+                    boolean isAdmin = "admin".equalsIgnoreCase(uname);
+                    if (userDao.findByUsername(uname) == null) {
+                        userDao.insert(new User(uname, pwd, isAdmin, System.currentTimeMillis()));
+                    }
+                }
+                // Xoá key cũ để hoàn tất di trú sang Room
+                prefs.edit().remove(KEY_USERS_LEGACY).apply();
             } catch (JSONException ignored) {
             }
         }
@@ -58,41 +90,41 @@ public class SessionManager {
 
     /** @return true nếu đăng ký thành công, false nếu username đã tồn tại. */
     public boolean register(String username, String password) {
-        JSONObject users = getUsers();
-        if (users.has(username)) {
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return false;
         }
+        String cleanUname = username.trim();
+        if (userDao.findByUsername(cleanUname) != null) {
+            return false;
+        }
+        boolean isAdmin = "admin".equalsIgnoreCase(cleanUname);
         try {
-            users.put(username, password);
-        } catch (JSONException e) {
+            userDao.insert(new User(cleanUname, password.trim(), isAdmin, System.currentTimeMillis()));
+            return true;
+        } catch (Exception e) {
             return false;
         }
-        prefs.edit().putString(KEY_USERS, users.toString()).apply();
-        return true;
     }
 
-    /** @return true nếu đăng nhập đúng tài khoản/mật khẩu. */
+    /** @return true nếu đăng nhập đúng tài khoản/mật khẩu trong Room DB. */
     public boolean login(String username, String password) {
-        JSONObject users = getUsers();
-        if (users.has(username)) {
-            String savedPassword = users.optString(username, null);
-            if (savedPassword != null && savedPassword.equals(password)) {
-                prefs.edit().putString(KEY_LOGGED_IN_USER, username).apply();
-                return true;
-            }
+        if (username == null || password == null) return false;
+        User user = userDao.login(username.trim(), password.trim());
+        if (user != null) {
+            prefs.edit().putString(KEY_LOGGED_IN_USER, user.getUsername()).apply();
+            return true;
         }
         return false;
     }
 
     /** Đăng nhập thông qua tài khoản Google */
     public void loginWithGoogle(String email, String displayName) {
-        String username = (displayName != null && !displayName.isEmpty()) ? displayName : email;
-        JSONObject users = getUsers();
-        if (!users.has(username)) {
+        String username = (displayName != null && !displayName.trim().isEmpty()) ? displayName.trim() : email;
+        User user = userDao.findByUsername(username);
+        if (user == null) {
             try {
-                users.put(username, "google_oauth");
-                prefs.edit().putString(KEY_USERS, users.toString()).apply();
-            } catch (JSONException ignored) {
+                userDao.insert(new User(username, "google_oauth", false, System.currentTimeMillis()));
+            } catch (Exception ignored) {
             }
         }
         prefs.edit().putString(KEY_LOGGED_IN_USER, username).apply();
@@ -112,21 +144,23 @@ public class SessionManager {
 
     /** Kiểm tra tài khoản hiện tại có quyền Quản trị viên (Admin) hay không */
     public boolean isAdmin() {
-        return "admin".equalsIgnoreCase(getCurrentUser());
+        String current = getCurrentUser();
+        if (current == null) return false;
+        if ("admin".equalsIgnoreCase(current)) return true;
+        User user = userDao.findByUsername(current);
+        return user != null && user.isAdmin();
     }
 
-    /** Lấy danh sách tất cả tài khoản trong hệ thống */
+    /** Lấy danh sách tất cả tài khoản trong hệ thống từ Room DB */
     public List<UserInfo> getAllUserList() {
-        List<UserInfo> list = new ArrayList<>();
-        JSONObject users = getUsers();
-        Iterator<String> keys = users.keys();
-        while (keys.hasNext()) {
-            String uname = keys.next();
-            String pwd = users.optString(uname, "");
-            boolean admin = "admin".equalsIgnoreCase(uname);
-            list.add(new UserInfo(uname, pwd, admin));
+        List<UserInfo> result = new ArrayList<>();
+        List<User> list = userDao.getAllUsers();
+        if (list != null) {
+            for (User u : list) {
+                result.add(new UserInfo(u.getUsername(), u.getPassword(), u.isAdmin()));
+            }
         }
-        return list;
+        return result;
     }
 
     /** Xóa một tài khoản (không cho phép xóa tài khoản admin gốc) */
@@ -134,32 +168,29 @@ public class SessionManager {
         if ("admin".equalsIgnoreCase(username)) {
             return false;
         }
-        JSONObject users = getUsers();
-        if (users.has(username)) {
-            users.remove(username);
-            prefs.edit().putString(KEY_USERS, users.toString()).apply();
+        User user = userDao.findByUsername(username);
+        if (user != null) {
+            userDao.deleteByUsername(username);
             return true;
         }
         return false;
     }
 
-    /** Đổi mật khẩu cho một tài khoản */
+    /** Đổi mật khẩu cho một tài khoản trong Room DB */
     public boolean updateUserPassword(String username, String newPassword) {
-        JSONObject users = getUsers();
-        if (users.has(username)) {
-            try {
-                users.put(username, newPassword);
-                prefs.edit().putString(KEY_USERS, users.toString()).apply();
-                return true;
-            } catch (JSONException e) {
-                return false;
-            }
+        if (username == null || newPassword == null || newPassword.trim().isEmpty()) {
+            return false;
+        }
+        User user = userDao.findByUsername(username);
+        if (user != null) {
+            userDao.updatePassword(username, newPassword.trim());
+            return true;
         }
         return false;
     }
 
     public int getUserCount() {
-        return getUsers().length();
+        return userDao.getUserCount();
     }
 
     /** Quản lý API Key TMDB */
@@ -198,15 +229,6 @@ public class SessionManager {
             prefs.edit().remove(KEY_ANNOUNCEMENT).apply();
         } else {
             prefs.edit().putString(KEY_ANNOUNCEMENT, announcement.trim()).apply();
-        }
-    }
-
-    private JSONObject getUsers() {
-        String json = prefs.getString(KEY_USERS, "{}");
-        try {
-            return new JSONObject(json);
-        } catch (JSONException e) {
-            return new JSONObject();
         }
     }
 }
