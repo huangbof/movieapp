@@ -5,9 +5,6 @@ import androidx.room.PrimaryKey;
 
 import com.example.uneti.model.Movie;
 
-/**
- * Entity đại diện cho phim do Admin tự thêm, sửa, xóa cục bộ trong app.
- */
 @Entity(tableName = "custom_movies")
 public class CustomMovie {
 
@@ -75,3 +72,4 @@ public class CustomMovie {
         );
     }
 }
+

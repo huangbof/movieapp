@@ -5,7 +5,6 @@
     android:background="@color/bgRoot"
     android:orientation="vertical">
 
-    <!-- Header bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +57,6 @@
             android:textSize="12.5sp" />
     </LinearLayout>
 
-    <!-- Chat Message List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChatMessages"
         android:layout_width="match_parent"
@@ -67,7 +65,6 @@
         android:clipToPadding="false"
         android:paddingVertical="8dp" />
 
-    <!-- Suggestion Chips -->
     <HorizontalScrollView
         android:id="@+id/scrollChips"
         android:layout_width="match_parent"
@@ -156,7 +153,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Bottom Input Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -194,3 +190,4 @@
     </LinearLayout>
 
 </LinearLayout>
+

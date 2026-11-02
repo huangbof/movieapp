@@ -45,7 +45,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         if (user.isAdmin) {
             holder.tvRoleBadge.setVisibility(View.VISIBLE);
-            holder.btnDeleteUser.setVisibility(View.GONE); // Không cho xóa Admin
+            holder.btnDeleteUser.setVisibility(View.GONE);
         } else {
             holder.tvRoleBadge.setVisibility(View.GONE);
             holder.btnDeleteUser.setVisibility(View.VISIBLE);
@@ -82,3 +82,4 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 }
+

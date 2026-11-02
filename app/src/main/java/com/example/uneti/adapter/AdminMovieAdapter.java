@@ -99,3 +99,4 @@ public class AdminMovieAdapter extends RecyclerView.Adapter<AdminMovieAdapter.Mo
         }
     }
 }
+

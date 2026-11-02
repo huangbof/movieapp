@@ -23,12 +23,6 @@ import com.example.uneti.model.ChatMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment màn hình Chatbox AI:
- * - Trò chuyện và nhận gợi ý phim thông minh
- * - Đính kèm thẻ phim tương tác (xem chi tiết / trailer)
- * - Thanh gợi ý nhanh các chủ đề phổ biến
- */
 public class AiChatFragment extends Fragment {
 
     private final List<ChatMessage> messageList = new ArrayList<>();
@@ -65,19 +59,16 @@ public class AiChatFragment extends Fragment {
         chatAdapter = new ChatAdapter(messageList);
         rvChatMessages.setAdapter(chatAdapter);
 
-        // Tin nhắn chào mừng ban đầu
         if (messageList.isEmpty()) {
             initWelcomeMessage();
         }
 
-        // Bắt sự kiện gửi tin nhắn
         btnSendMessage.setOnClickListener(v -> handleSendMessage());
         etInputMessage.setOnEditorActionListener((v, actionId, event) -> {
             handleSendMessage();
             return true;
         });
 
-        // Nút xoá chat
         btnClearChat.setOnClickListener(v -> {
             messageList.clear();
             initWelcomeMessage();
@@ -85,7 +76,6 @@ public class AiChatFragment extends Fragment {
             Toast.makeText(getContext(), "Đã làm mới cuộc trò chuyện", Toast.LENGTH_SHORT).show();
         });
 
-        // Thiết lập sự kiện cho các chip gợi ý nhanh
         setupSuggestionChips(view);
     }
 
@@ -121,26 +111,22 @@ public class AiChatFragment extends Fragment {
 
         etInputMessage.setText("");
 
-        // 1. Thêm tin nhắn của User
         ChatMessage userMsg = new ChatMessage(input, true);
         messageList.add(userMsg);
         int userPos = messageList.size() - 1;
         chatAdapter.notifyItemInserted(userPos);
 
-        // 2. Thêm bong bóng loading của AI
         ChatMessage loadingMsg = ChatMessage.createLoading();
         messageList.add(loadingMsg);
         int loadingPos = messageList.size() - 1;
         chatAdapter.notifyItemInserted(loadingPos);
         rvChatMessages.scrollToPosition(loadingPos);
 
-        // 3. Gửi sang AI Service
         aiChatService.sendMessage(input, new AiChatService.ChatCallback() {
             @Override
             public void onSuccess(ChatMessage reply) {
                 if (!isAdded()) return;
 
-                // Xoá bong bóng loading và thêm câu trả lời thật
                 int idx = messageList.indexOf(loadingMsg);
                 if (idx != -1) {
                     messageList.remove(idx);
@@ -171,3 +157,4 @@ public class AiChatFragment extends Fragment {
         });
     }
 }
+

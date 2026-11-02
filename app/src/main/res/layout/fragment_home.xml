@@ -15,7 +15,6 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <!-- Thanh thông báo hệ thống từ Admin (nếu có) -->
             <LinearLayout
                 android:id="@+id/layoutAnnouncement"
                 android:layout_width="match_parent"
@@ -45,7 +44,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Banner phim nổi bật -->
             <FrameLayout
                 android:id="@+id/heroContainer"
                 android:layout_width="match_parent"
@@ -120,7 +118,6 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- Banner Trợ lý AI Nitflex -->
             <LinearLayout
                 android:id="@+id/btnOpenAiChat"
                 android:layout_width="match_parent"
@@ -176,7 +173,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Các hàng danh mục: Thịnh hành, Đề cử, Đang chiếu, Sắp chiếu... -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewCategories"
                 android:layout_width="match_parent"
@@ -195,3 +191,4 @@
         android:visibility="visible" />
 
 </FrameLayout>
+

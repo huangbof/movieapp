@@ -39,3 +39,4 @@ public interface UserDao {
     @Query("UPDATE users SET password = :newPassword WHERE username = :username")
     void updatePassword(String username, String newPassword);
 }
+

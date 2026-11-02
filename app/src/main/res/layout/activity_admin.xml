@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <!-- Header bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -47,7 +46,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 1. THỐNG KÊ TỔNG QUAN -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,7 +145,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 2. QUẢN LÝ PHIM NỘI BỘ (THÊM, SỬA, XÓA) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,7 +193,6 @@
                 android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false" />
 
-            <!-- 3. QUẢN LÝ NGƯỜI DÙNG -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -233,7 +229,6 @@
                 android:layout_marginTop="12dp"
                 android:nestedScrollingEnabled="false" />
 
-            <!-- 4. THÔNG BÁO TOÀN HỆ THỐNG -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -297,7 +292,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- 5. CẤU HÌNH API KEY -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -331,7 +325,6 @@
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
-            <!-- 6. CẤU HÌNH GOOGLE GEMINI AI KEY (TUỲ CHỌN) -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -381,3 +374,4 @@
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
+

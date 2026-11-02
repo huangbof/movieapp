@@ -5,14 +5,12 @@
     android:fitsSystemWindows="true"
     android:background="#000000">
 
-    <!-- Container cho Custom View khi xem Fullscreen trong WebView -->
     <FrameLayout
         android:id="@+id/customViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <!-- Container chính chứa WebView & thanh tiêu đề -->
     <RelativeLayout
         android:id="@+id/mainPlayerContainer"
         android:layout_width="match_parent"
@@ -24,7 +22,6 @@
             android:layout_height="match_parent"
             android:background="#000000" />
 
-        <!-- Top Header Bar -->
         <LinearLayout
             android:id="@+id/headerBar"
             android:layout_width="match_parent"
@@ -58,7 +55,6 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Nút dự phòng: Mở nhanh bằng YouTube nếu video bị bản quyền chặn nhúng -->
             <TextView
                 android:id="@+id/btnOpenExternal"
                 android:layout_width="wrap_content"
@@ -82,3 +78,4 @@
     </RelativeLayout>
 
 </FrameLayout>
+

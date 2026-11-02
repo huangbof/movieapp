@@ -10,10 +10,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Định nghĩa các endpoint của TMDB API mà ứng dụng sử dụng.
- * Xem đầy đủ tài liệu API tại: https://developer.themoviedb.org/reference
- */
 public interface TmdbApi {
 
     @GET("movie/popular")
@@ -81,3 +77,4 @@ public interface TmdbApi {
             @Query("language") String language
     );
 }
+

@@ -14,11 +14,6 @@ import com.example.uneti.model.MovieCategory;
 
 import java.util.List;
 
-/**
- * Adapter hiển thị danh sách các hàng danh mục phim (Thịnh hành, Đề cử,
- * Đang chiếu, Sắp chiếu...), mỗi hàng là một RecyclerView cuộn ngang
- * (PosterAdapter) có tiêu đề riêng.
- */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private final List<MovieCategory> categories;
@@ -61,3 +56,4 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         }
     }
 }
+

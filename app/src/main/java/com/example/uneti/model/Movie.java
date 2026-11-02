@@ -2,9 +2,6 @@ package com.example.uneti.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Model đại diện cho một bộ phim lấy từ TMDB API.
- */
 public class Movie {
 
     private int id;
@@ -65,3 +62,4 @@ public class Movie {
         return voteAverage;
     }
 }
+

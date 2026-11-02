@@ -3,9 +3,6 @@ package com.example.uneti.data;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Entity Room đại diện cho một Đánh giá / Bình luận phim của người dùng.
- */
 @Entity(tableName = "movie_reviews")
 public class MovieReview {
 
@@ -35,3 +32,4 @@ public class MovieReview {
     public String getComment() { return comment; }
     public long getCreatedAt() { return createdAt; }
 }
+

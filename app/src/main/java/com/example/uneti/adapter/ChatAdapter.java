@@ -17,9 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Adapter quản lý danh sách tin nhắn giữa Người dùng và Trợ lý AI Nitflex.
- */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_USER = 1;
@@ -104,3 +101,4 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 }
+

@@ -40,13 +40,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Màn hình Trang chủ theo phong cách Netflix / FPT Play:
- * - Banner lớn giới thiệu 1 phim nổi bật ở trên cùng.
- * - Bên dưới là các hàng phim cuộn ngang theo danh mục
- *   (Thịnh hành, Đề cử hàng đầu, Đang chiếu, Sắp chiếu),
- *   mỗi hàng lấy dữ liệu từ một endpoint khác nhau của TMDB.
- */
 public class HomeFragment extends Fragment {
 
     private static final String LANGUAGE = "vi-VN";
@@ -133,8 +126,6 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         categories.clear();
 
-        // Mỗi "slot" giữ đúng vị trí hàng để thứ tự không bị xáo trộn
-        // khi các request trả về không đồng thời.
         categories.add(new MovieCategory("Thịnh hành", new ArrayList<>()));
         categories.add(new MovieCategory("Đề cử hàng đầu", new ArrayList<>()));
         categories.add(new MovieCategory("Đang chiếu", new ArrayList<>()));
@@ -160,7 +151,6 @@ public class HomeFragment extends Fragment {
                     categories.set(slotIndex,
                             new MovieCategory(categories.get(slotIndex).getTitle(), movies));
 
-                    // Banner lớn lấy phim đầu tiên của hàng "Thịnh hành"
                     if (slotIndex == 0 && !movies.isEmpty()) {
                         bindHero(movies.get(0));
                     }
@@ -263,3 +253,4 @@ public class HomeFragment extends Fragment {
         }
     }
 }
+

@@ -3,9 +3,6 @@ package com.example.uneti.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Model đại diện cho một tin nhắn trong đoạn chat giữa người dùng và Trợ lý AI Nitflex.
- */
 public class ChatMessage {
     private String text;
     private boolean isUser;
@@ -67,3 +64,4 @@ public class ChatMessage {
         this.movies = movies;
     }
 }
+

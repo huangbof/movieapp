@@ -33,3 +33,4 @@ public interface CustomMovieDao {
     @Query("SELECT COUNT(*) FROM custom_movies")
     int count();
 }
+

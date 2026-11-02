@@ -18,7 +18,6 @@ import com.example.uneti.network.Constants;
 
 import java.util.List;
 
-/** Adapter hiển thị danh sách phim Yêu thích đã lưu trong Room. */
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
     private final List<FavoriteMovie> favorites;
@@ -76,3 +75,4 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         }
     }
 }
+

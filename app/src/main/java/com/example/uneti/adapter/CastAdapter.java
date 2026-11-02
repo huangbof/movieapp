@@ -17,10 +17,6 @@ import com.example.uneti.network.Constants;
 
 import java.util.List;
 
-/**
- * Adapter hiển thị danh sách diễn viên (Cast) dạng cuộn ngang trong màn hình Chi tiết phim.
- * Ảnh diễn viên được cắt hình tròn tự động nhờ Glide CircleCrop.
- */
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder> {
 
     private final List<Cast> castList;
@@ -61,7 +57,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
                     .error(R.drawable.ic_profile)
                     .into(holder.imgCastPhoto);
         } else {
-            // Không có ảnh: hiển thị ký tự đầu của tên
+
             holder.imgCastPhoto.setVisibility(View.GONE);
             holder.tvCastInitial.setVisibility(View.VISIBLE);
             String name = cast.getName();
@@ -88,3 +84,4 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
         }
     }
 }
+

@@ -20,11 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * Màn hình xem trực tiếp Trailer ngay trong app Nitflex bằng WebView nhúng YouTube Player.
- * Cấu hình đầy đủ User-Agent, Origin, Referer để tránh lỗi Error 152 của YouTube,
- * đồng thời có nút fallback mở qua YouTube nếu video bị hãng phim chặn nhúng.
- */
 public class TrailerPlayerActivity extends AppCompatActivity {
 
     public static final String EXTRA_VIDEO_KEY = "extra_video_key";
@@ -90,10 +85,8 @@ public class TrailerPlayerActivity extends AppCompatActivity {
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setAllowFileAccess(true);
 
-        // Fix lỗi Error 152: YouTube chặn WebView mặc định do cờ "; wv". Cần giả lập Chrome Mobile chuẩn.
         settings.setUserAgentString("Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36");
 
-        // Cho phép Cookies của YouTube
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(webViewTrailer, true);
 
@@ -103,7 +96,7 @@ public class TrailerPlayerActivity extends AppCompatActivity {
                 Uri uri = request.getUrl();
                 if (uri != null) {
                     String urlStr = uri.toString();
-                    // Nếu người dùng bấm vào nút "Watch on YouTube" hoặc link YouTube bên trong
+
                     if (urlStr.contains("youtube.com/watch") || urlStr.contains("youtu.be")) {
                         try {
                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -151,7 +144,6 @@ public class TrailerPlayerActivity extends AppCompatActivity {
             }
         });
 
-        // Sử dụng youtube-nocookie với origin hợp lệ để tránh Error 152
         String embedUrl = "https://www.youtube-nocookie.com/embed/" + videoKey
                 + "?autoplay=1&playsinline=1&modestbranding=1&rel=0&fs=1&enablejsapi=1&origin=https://com.example.uneti";
 
@@ -216,3 +208,4 @@ public class TrailerPlayerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+

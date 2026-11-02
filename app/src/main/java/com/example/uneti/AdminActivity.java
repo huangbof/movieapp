@@ -25,24 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-/**
- * Màn hình Bảng điều khiển Quản trị viên (Admin Panel):
- * - Thống kê số lượng tài khoản, số phim nội bộ, số phim yêu thích.
- * - Quản lý Phim nội bộ: Thêm phim mới, Sửa thông tin phim, Xóa phim.
- * - Quản lý người dùng: Thêm tài khoản, Đổi mật khẩu, Xóa tài khoản.
- * - Đăng thông báo toàn hệ thống (Broadcast Announcement) trên Trang chủ.
- * - Cấu hình / Thay đổi TMDB API Key trực tiếp.
- */
 public class AdminActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
 
-    // Quản lý người dùng
     private RecyclerView rvUsers;
     private UserAdapter userAdapter;
     private final List<SessionManager.UserInfo> userList = new ArrayList<>();
 
-    // Quản lý phim nội bộ
     private RecyclerView rvCustomMovies;
     private AdminMovieAdapter movieAdapter;
     private final List<CustomMovie> customMovieList = new ArrayList<>();
@@ -73,7 +63,6 @@ public class AdminActivity extends AppCompatActivity {
         etApiKey = findViewById(R.id.etApiKey);
         etGeminiKey = findViewById(R.id.etGeminiKey);
 
-        // 1. Setup RecyclerView Người dùng
         rvUsers = findViewById(R.id.rvUsers);
         rvUsers.setLayoutManager(new LinearLayoutManager(this));
         userAdapter = new UserAdapter(userList, new UserAdapter.OnUserActionListener() {
@@ -89,7 +78,6 @@ public class AdminActivity extends AppCompatActivity {
         });
         rvUsers.setAdapter(userAdapter);
 
-        // 2. Setup RecyclerView Phim nội bộ do Admin quản lý
         rvCustomMovies = findViewById(R.id.rvCustomMovies);
         rvCustomMovies.setLayoutManager(new LinearLayoutManager(this));
         movieAdapter = new AdminMovieAdapter(customMovieList, new AdminMovieAdapter.OnMovieActionListener() {
@@ -105,7 +93,6 @@ public class AdminActivity extends AppCompatActivity {
         });
         rvCustomMovies.setAdapter(movieAdapter);
 
-        // Các nút hành động
         findViewById(R.id.btnAddMovie).setOnClickListener(v -> showMovieDialog(null));
         findViewById(R.id.btnAddUser).setOnClickListener(v -> showAddUserDialog());
         findViewById(R.id.btnSaveAnnouncement).setOnClickListener(v -> saveAnnouncement());
@@ -117,13 +104,12 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        // Tải danh sách người dùng
+
         userList.clear();
         userList.addAll(sessionManager.getAllUserList());
         userAdapter.notifyDataSetChanged();
         tvStatUsers.setText(String.valueOf(userList.size()));
 
-        // Tải danh sách phim nội bộ và số lượng phim yêu thích
         Executors.newSingleThreadExecutor().execute(() -> {
             List<CustomMovie> movies = AppDatabase.getInstance(this).customMovieDao().getAll();
             int favCount = AppDatabase.getInstance(this).favoriteDao().getAll().size();
@@ -137,24 +123,17 @@ public class AdminActivity extends AppCompatActivity {
             });
         });
 
-        // Thông báo hiện tại
         etAnnouncement.setText(sessionManager.getAnnouncement());
 
-        // API Key hiện tại
         String activeKey = sessionManager.getCustomApiKey();
         if (activeKey == null || activeKey.isEmpty()) {
             activeKey = Constants.API_KEY;
         }
         etApiKey.setText(activeKey);
 
-        // Gemini AI Key hiện tại (nếu có)
         String geminiKey = sessionManager.getGeminiApiKey();
         etGeminiKey.setText(geminiKey != null ? geminiKey : "");
     }
-
-    // ==========================================
-    // QUẢN LÝ PHIM (THÊM, SỬA, XÓA)
-    // ==========================================
 
     private void showMovieDialog(@Nullable CustomMovie existingMovie) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_movie, null);
@@ -222,11 +201,11 @@ public class AdminActivity extends AppCompatActivity {
                     AppDatabase.getInstance(this).customMovieDao().update(existingMovie);
                 } else {
                     CustomMovie newMovie = new CustomMovie(
-                            0, // autoGenerate id
+                            0,
                             title,
                             overview,
                             poster,
-                            poster, // backdrop
+                            poster,
                             finalRating,
                             year,
                             videoKey,
@@ -281,10 +260,6 @@ public class AdminActivity extends AppCompatActivity {
         }
         return input;
     }
-
-    // ==========================================
-    // QUẢN LÝ NGƯỜI DÙNG
-    // ==========================================
 
     private void showAddUserDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -371,10 +346,6 @@ public class AdminActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // ==========================================
-    // THÔNG BÁO & CẤU HÌNH
-    // ==========================================
-
     private void saveAnnouncement() {
         String msg = etAnnouncement.getText().toString().trim();
         sessionManager.setAnnouncement(msg);
@@ -407,3 +378,4 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 }
+

@@ -129,7 +129,6 @@
                     android:textColor="@color/textMuted"
                     android:textSize="13.5sp" />
 
-                <!-- Danh sách Diễn viên -->
                 <LinearLayout
                     android:id="@+id/layoutCast"
                     android:layout_width="match_parent"
@@ -156,7 +155,6 @@
                         android:paddingBottom="4dp" />
                 </LinearLayout>
 
-                <!-- Đánh giá và Bình luận -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -171,7 +169,6 @@
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <!-- Khung nhập đánh giá -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -187,7 +184,6 @@
                             android:textColor="@color/textMuted"
                             android:textSize="12.5sp" />
 
-                        <!-- 5 sao chọn -->
                         <LinearLayout
                             android:id="@+id/layoutStarRating"
                             android:layout_width="wrap_content"
@@ -274,7 +270,6 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Danh sách bình luận -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvReviews"
                         android:layout_width="match_parent"
@@ -306,3 +301,4 @@
         android:layout_gravity="center" />
 
 </FrameLayout>
+

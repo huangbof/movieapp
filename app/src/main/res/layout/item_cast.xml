@@ -17,7 +17,6 @@
             android:background="@drawable/bg_circle_avatar"
             android:scaleType="centerCrop" />
 
-        <!-- fallback icon nếu không có ảnh -->
         <TextView
             android:id="@+id/tvCastInitial"
             android:layout_width="match_parent"
@@ -56,3 +55,4 @@
         android:textSize="10sp" />
 
 </LinearLayout>
+

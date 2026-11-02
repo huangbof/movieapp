@@ -18,11 +18,6 @@ import com.example.uneti.network.Constants;
 
 import java.util.List;
 
-/**
- * Adapter hiển thị danh sách phim dạng lưới (RecyclerView) ở Trang chủ.
- * Khi nhấn vào một phim, hiện tạm Toast tên phim
- * (màn hình Chi tiết phim sẽ được xây dựng ở bước tiếp theo).
- */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private final List<Movie> movieList;
@@ -80,3 +75,4 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
     }
 }
+

@@ -3,9 +3,6 @@ package com.example.uneti.data;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Entity Room đại diện cho một phim trong Lịch sử xem phim.
- */
 @Entity(tableName = "history_movies")
 public class HistoryMovie {
 
@@ -31,3 +28,4 @@ public class HistoryMovie {
     public double getVoteAverage() { return voteAverage; }
     public long getViewedAt() { return viewedAt; }
 }
+

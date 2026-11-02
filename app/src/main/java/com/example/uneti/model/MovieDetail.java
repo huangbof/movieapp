@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Model đầy đủ cho màn hình Chi tiết phim, lấy từ endpoint GET /movie/{id}.
- */
 public class MovieDetail {
 
     private int id;
@@ -39,3 +36,4 @@ public class MovieDetail {
     public int getRuntime() { return runtime; }
     public List<Genre> getGenres() { return genres; }
 }
+

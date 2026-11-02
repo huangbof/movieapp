@@ -25,13 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Màn hình Cá nhân:
- * - Thiết kế giao diện sang trọng chuẩn phong cách Netflix Dark Theme
- * - Thống kê nhanh: Số phim đã xem, Số phim yêu thích, Số đánh giá
- * - Quản lý Lịch sử xem phim, Bảng điều khiển Quản trị viên (Admin Panel)
- * - Hiển thị thông tin đề tài sinh viên bài tập lớn UNETI
- */
 public class ProfileFragment extends Fragment {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -42,7 +35,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
-        // Đảm bảo luôn luôn áp dụng chế độ nền tối mặc định
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
@@ -80,7 +73,6 @@ public class ProfileFragment extends Fragment {
             }
         }
 
-        // Bảng điều khiển Admin
         View layoutAdminSection = view.findViewById(R.id.layoutAdminSection);
         View btnAdminPanel = view.findViewById(R.id.btnAdminPanel);
         if (isAdmin) {
@@ -92,7 +84,6 @@ public class ProfileFragment extends Fragment {
             if (layoutAdminSection != null) layoutAdminSection.setVisibility(View.GONE);
         }
 
-        // Mở Lịch sử xem phim
         View btnHistory = view.findViewById(R.id.btnHistory);
         btnHistory.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), HistoryActivity.class));
@@ -103,7 +94,6 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), HistoryActivity.class));
         });
 
-        // Click ô Yêu thích
         View btnStatFavorite = view.findViewById(R.id.btnStatFavorite);
         btnStatFavorite.setOnClickListener(v -> {
             if (getActivity() != null) {
@@ -115,13 +105,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Click ô Đánh giá
         View btnStatReview = view.findViewById(R.id.btnStatReview);
         btnStatReview.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "Bạn có thể viết đánh giá tại trang Chi tiết mỗi bộ phim!", Toast.LENGTH_SHORT).show();
         });
 
-        // Nút Đăng xuất
         view.findViewById(R.id.btnLogout).setOnClickListener(v -> handleLogout(sessionManager));
     }
 
@@ -136,10 +124,10 @@ public class ProfileFragment extends Fragment {
             AppDatabase db = AppDatabase.getInstance(requireContext());
             int historyCount = db.historyDao().getAll().size();
             int favoriteCount = db.favoriteDao().getAll().size();
-            // Lấy tổng đánh giá trong hệ thống
+
             int reviewCount = 0;
             try {
-                // Tạm thời đếm tổng phim trong lịch sử có review
+
                 reviewCount = db.historyDao().getAll().size() > 0 ? db.historyDao().getAll().size() : 0;
             } catch (Exception ignored) {
             }
@@ -160,7 +148,7 @@ public class ProfileFragment extends Fragment {
 
     private int fReviewCount(AppDatabase db) {
         try {
-            // Lấy danh sách phim trong history để ước lượng review hoặc đếm trực tiếp
+
             return db.historyDao().getAll().size();
         } catch (Exception e) {
             return 0;
@@ -190,3 +178,4 @@ public class ProfileFragment extends Fragment {
         }
     }
 }
+

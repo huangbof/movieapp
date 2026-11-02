@@ -3,10 +3,6 @@ package com.example.uneti.data;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Entity Room đại diện cho một phim trong danh sách Yêu thích,
- * lưu cục bộ trên máy (SQLite thông qua Room).
- */
 @Entity(tableName = "favorite_movies")
 public class FavoriteMovie {
 
@@ -29,3 +25,4 @@ public class FavoriteMovie {
     public String getPosterPath() { return posterPath; }
     public double getVoteAverage() { return voteAverage; }
 }
+

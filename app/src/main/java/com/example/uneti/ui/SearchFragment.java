@@ -34,16 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Màn hình Tìm kiếm & Khám phá phim:
- * - Thanh tìm kiếm theo từ khoá (gọi TMDB search + tìm phim nội bộ Room DB)
- * - Thanh lọc thể loại nhanh (Genre Chips): Hành động, Hài, Kinh dị, Tình cảm,
- *   Viễn tưởng, Hoạt hình, Giật gân, Tài liệu, Điểm cao
- * - Mặc định hiển thị Phim thịnh hành khi mở màn hình
- */
 public class SearchFragment extends Fragment {
 
-    // ID thể loại TMDB (Genre IDs)
     private static final String GENRE_ACTION = "28";
     private static final String GENRE_COMEDY = "35";
     private static final String GENRE_HORROR = "27";
@@ -58,7 +50,6 @@ public class SearchFragment extends Fragment {
     private TextView tvEmpty, tvSearchLabel;
     private ProgressBar progressBar;
 
-    // Chip references để cập nhật trạng thái selected
     private TextView chipAll, chipAction, chipComedy, chipHorror, chipRomance;
     private TextView chipSciFi, chipAnimation, chipThriller, chipDocumentary, chipTopRated;
     private TextView activeChip;
@@ -82,7 +73,6 @@ public class SearchFragment extends Fragment {
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        // Ánh xạ các chip
         chipAll = view.findViewById(R.id.chipAll);
         chipAction = view.findViewById(R.id.chipAction);
         chipComedy = view.findViewById(R.id.chipComedy);
@@ -95,7 +85,6 @@ public class SearchFragment extends Fragment {
         chipTopRated = view.findViewById(R.id.chipTopRated);
         activeChip = chipAll;
 
-        // Sự kiện tìm kiếm
         view.findViewById(R.id.btnSearch).setOnClickListener(v -> doSearch());
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH
@@ -106,7 +95,6 @@ public class SearchFragment extends Fragment {
             return false;
         });
 
-        // Sự kiện chip lọc thể loại
         chipAll.setOnClickListener(v -> { setActiveChip(chipAll); loadPopular(); });
         chipAction.setOnClickListener(v -> { setActiveChip(chipAction); loadByGenre(GENRE_ACTION, "💥 Hành động"); });
         chipComedy.setOnClickListener(v -> { setActiveChip(chipComedy); loadByGenre(GENRE_COMEDY, "😂 Hài hước"); });
@@ -118,13 +106,9 @@ public class SearchFragment extends Fragment {
         chipDocumentary.setOnClickListener(v -> { setActiveChip(chipDocumentary); loadByGenre(GENRE_DOCUMENTARY, "🎥 Tài liệu"); });
         chipTopRated.setOnClickListener(v -> { setActiveChip(chipTopRated); loadTopRated(); });
 
-        // Mặc định hiển thị phim thịnh hành
         loadPopular();
     }
 
-    /**
-     * Cập nhật chip đang được chọn: chip chọn → đổi màu vàng/trắng; chip cũ → về dạng mờ.
-     */
     private void setActiveChip(TextView chip) {
         if (activeChip != null && activeChip != chipAll) {
             activeChip.setBackgroundResource(R.drawable.bg_chip_prompt);
@@ -137,11 +121,6 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    //  Load dữ liệu
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /** Mặc định: Phim thịnh hành */
     private void loadPopular() {
         tvSearchLabel.setText("🔥 Phim thịnh hành");
         showLoading(true);
@@ -167,7 +146,6 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /** Phim theo thể loại (Discover API) */
     private void loadByGenre(String genreId, String label) {
         tvSearchLabel.setText(label);
         showLoading(true);
@@ -193,7 +171,6 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /** Top phim được đánh giá cao nhất */
     private void loadTopRated() {
         tvSearchLabel.setText("🏆 Phim điểm cao nhất");
         showLoading(true);
@@ -219,7 +196,6 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /** Tìm kiếm theo từ khoá: kết hợp TMDB + Room DB (phim nội bộ) */
     private void doSearch() {
         String query = etSearch.getText().toString().trim();
         if (query.isEmpty()) {
@@ -227,7 +203,6 @@ public class SearchFragment extends Fragment {
             return;
         }
 
-        // Reset chip khi người dùng gõ tìm kiếm
         setActiveChip(chipAll);
         tvSearchLabel.setText("🔍 Kết quả tìm kiếm: \"" + query + "\"");
         showLoading(true);
@@ -255,10 +230,6 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /**
-     * Gộp kết quả từ phim nội bộ Room DB và TMDB rồi hiển thị:
-     * Phim nội bộ Nitflex được ưu tiên xuất hiện trước.
-     */
     private void mergeLocalAndShow(String query, List<Movie> tmdbResults) {
         if (getContext() == null) return;
         Executors.newSingleThreadExecutor().execute(() -> {
@@ -281,10 +252,6 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    //  Helpers UI
-    // ─────────────────────────────────────────────────────────────────────────
-
     private void showResults(List<Movie> movies) {
         tvEmpty.setVisibility(View.GONE);
         recyclerView.setAdapter(new MovieAdapter(movies));
@@ -304,3 +271,4 @@ public class SearchFragment extends Fragment {
         }
     }
 }
+

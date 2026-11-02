@@ -22,11 +22,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Màn hình danh sách phim Yêu thích, đọc từ cơ sở dữ liệu Room cục bộ.
- * Danh sách được tải lại mỗi khi quay về tab này (onResume) để cập nhật
- * ngay sau khi người dùng thêm/xoá yêu thích ở màn hình Chi tiết phim.
- */
 public class FavoriteFragment extends Fragment {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -78,3 +73,4 @@ public class FavoriteFragment extends Fragment {
         });
     }
 }
+

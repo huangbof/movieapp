@@ -5,7 +5,6 @@
     android:background="@color/bgRoot"
     android:orientation="vertical">
 
-    <!-- Thanh tìm kiếm -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +41,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Thanh lọc thể loại (Genre Filter Chips) -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +55,6 @@
             android:orientation="horizontal"
             android:paddingVertical="4dp">
 
-            <!-- Chip "Tất cả" -->
             <TextView
                 android:id="@+id/chipAll"
                 android:layout_width="wrap_content"
@@ -182,7 +179,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Tiêu đề kết quả -->
     <TextView
         android:id="@+id/tvSearchLabel"
         android:layout_width="match_parent"
@@ -195,7 +191,6 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
-    <!-- Kết quả tìm kiếm / danh sách phim theo thể loại -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -227,3 +222,4 @@
     </FrameLayout>
 
 </LinearLayout>
+

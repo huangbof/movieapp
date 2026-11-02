@@ -11,7 +11,7 @@ import com.example.uneti.auth.SessionManager;
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Cố định chế độ nền tối mặc định chuẩn rạp phim
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
@@ -27,3 +27,4 @@ public class SplashActivity extends AppCompatActivity {
         }, 2000);
     }
 }
+

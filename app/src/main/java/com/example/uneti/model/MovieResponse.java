@@ -4,10 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Model đại diện cho phần phản hồi (response) của API danh sách phim
- * (ví dụ: GET /movie/popular).
- */
 public class MovieResponse {
 
     private int page;
@@ -35,3 +31,4 @@ public class MovieResponse {
         return totalResults;
     }
 }
+

@@ -23,3 +23,4 @@ public interface FavoriteDao {
     @Query("SELECT * FROM favorite_movies WHERE id = :movieId LIMIT 1")
     FavoriteMovie findById(int movieId);
 }
+

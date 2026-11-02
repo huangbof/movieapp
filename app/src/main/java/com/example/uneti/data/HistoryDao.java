@@ -22,3 +22,4 @@ public interface HistoryDao {
     @Query("DELETE FROM history_movies")
     void clearAll();
 }
+

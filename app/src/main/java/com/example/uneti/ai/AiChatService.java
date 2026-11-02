@@ -32,14 +32,6 @@ import java.util.concurrent.Executors;
 
 import retrofit2.Response;
 
-/**
- * Service xử lý phản hồi thông minh cho Chatbot AI Nitflex.
- * - Hỗ trợ gọi trực tiếp Google Gemini API (nếu được cài đặt API Key trong Cài đặt Admin).
- * - Tích hợp Bộ não AI phim ảnh cục bộ (Local Movie Intelligence Engine):
- *   + Tự động nhận diện ý định & thể loại (Hành động, Kinh dị, Hài, Tình cảm, Viễn tưởng, Điểm cao...).
- *   + Tích hợp trực tiếp dữ liệu phim TMDB và Phim độc quyền Nitflex (Room DB).
- *   + Đính kèm thẻ phim tương tác (người dùng bấm vào thẻ phim để mở ngay màn hình Chi tiết / Trailer).
- */
 public class AiChatService {
 
     private static final String TAG = "AiChatService";
@@ -62,26 +54,21 @@ public class AiChatService {
         executor.execute(() -> {
             String geminiKey = sessionManager.getGeminiApiKey();
 
-            // Nếu có Gemini API Key, thử gọi Gemini API trước
             if (geminiKey != null && !geminiKey.trim().isEmpty()) {
                 String geminiResponse = callGeminiApi(geminiKey.trim(), userMessage);
                 if (geminiResponse != null && !geminiResponse.trim().isEmpty()) {
-                    // Tìm kiếm thêm 2-3 phim liên quan để đính kèm thẻ
+
                     List<Movie> matchedMovies = findRelatedMovies(userMessage);
                     postResult(callback, new ChatMessage(geminiResponse, false, matchedMovies));
                     return;
                 }
             }
 
-            // Mặc định hoặc Fallback: Chạy Bộ phân tích Nitflex Movie AI Engine
             ChatMessage localReply = processLocalMovieAi(userMessage);
             postResult(callback, localReply);
         });
     }
 
-    /**
-     * Gọi Google Gemini REST API (gemini-1.5-flash)
-     */
     private String callGeminiApi(String apiKey, String prompt) {
         HttpURLConnection conn = null;
         try {
@@ -146,14 +133,10 @@ public class AiChatService {
         return null;
     }
 
-    /**
-     * Bộ não AI Phim Ảnh Nitflex: Phân tích ngữ nghĩa tiếng Việt, truy vấn TMDB & CSDL Room
-     */
     private ChatMessage processLocalMovieAi(String input) {
         String lower = input.toLowerCase().trim();
         String apiKey = Constants.getApiKey(context);
 
-        // 1. Phim độc quyền Nitflex (Custom Movie trong Room)
         if (lower.contains("độc quyền") || lower.contains("nitflex") || lower.contains("admin") || lower.contains("tự tạo")) {
             List<CustomMovie> customs = AppDatabase.getInstance(context).customMovieDao().getAll();
             if (customs != null && !customs.isEmpty()) {
@@ -167,7 +150,6 @@ public class AiChatService {
             }
         }
 
-        // 2. Chào hỏi / Thông tin về Bot
         if (lower.matches(".*(xin chào|chào|hello|hi|hey|alo|bạn là ai|giới thiệu).*") && !lower.contains("phim")) {
             return new ChatMessage("Xin chào bạn! 🍿 Tôi là Trợ lý AI Nitflex.\n\nTôi có thể giúp bạn:\n" +
                     "• Gợi ý phim theo thể loại (Hành động, Kinh dị, Hài, Lãng mạn...)\n" +
@@ -176,49 +158,41 @@ public class AiChatService {
                     "• Khám phá các phim Độc quyền Nitflex\n\nBạn đang có tâm trạng muốn xem thể loại phim gì?", false);
         }
 
-        // 3. Phim hành động (Action - TMDB genre 28)
         if (lower.contains("hành động") || lower.contains("action") || lower.contains("bắn súng") || lower.contains("võ thuật") || lower.contains("siêu anh hùng")) {
             List<Movie> list = getDiscoverMovies(apiKey, "28");
             return new ChatMessage("💥 Dưới đây là những siêu phẩm Hành Động mãn nhãn, kịch tính nghẹt thở nhất hiện nay dành cho bạn! Bấm vào phim để xem chi tiết & trailer:", false, list);
         }
 
-        // 4. Phim kinh dị (Horror - TMDB genre 27)
         if (lower.contains("kinh dị") || lower.contains("horror") || lower.contains("ma") || lower.contains("rùng rợn") || lower.contains("sợ hãi") || lower.contains("giật gân")) {
             List<Movie> list = getDiscoverMovies(apiKey, "27");
             return new ChatMessage("👻 Chuẩn bị tinh thần giật mình và lạnh gáy nhé! Đây là danh sách những bộ phim kinh dị rùng rợn nhất được đánh giá cao trên Nitflex:", false, list);
         }
 
-        // 5. Phim tình cảm / lãng mạn (Romance - TMDB genre 10749)
         if (lower.contains("tình cảm") || lower.contains("lãng mạn") || lower.contains("romance") || lower.contains("yêu") || lower.contains("hẹn hò") || lower.contains("ngọt ngào")) {
             List<Movie> list = getDiscoverMovies(apiKey, "10749");
             return new ChatMessage("💖 Những câu chuyện tình ngọt ngào, sâu lắng và đong đầy cảm xúc rất thích hợp để thư giãn tối nay:", false, list);
         }
 
-        // 6. Phim hài hước (Comedy - TMDB genre 35)
         if (lower.contains("hài") || lower.contains("hài hước") || lower.contains("comedy") || lower.contains("cười") || lower.contains("xả stress") || lower.contains("vui vẻ")) {
             List<Movie> list = getDiscoverMovies(apiKey, "35");
             return new ChatMessage("😂 Cần xả stress sau một ngày dài? Những bộ phim hài hước duyên dáng này chắc chắn sẽ mang lại nhiều tiếng cười cho bạn:", false, list);
         }
 
-        // 7. Hoạt hình / Anime (Animation - TMDB genre 16)
         if (lower.contains("hoạt hình") || lower.contains("anime") || lower.contains("animation") || lower.contains("disney") || lower.contains("ghibli")) {
             List<Movie> list = getDiscoverMovies(apiKey, "16");
             return new ChatMessage("🎨 Thế giới hoạt hình rực rỡ sắc màu, giàu ý nghĩa và cảm xúc dành cho bạn đây:", false, list);
         }
 
-        // 8. Khoa học viễn tưởng (Sci-Fi - TMDB genre 878)
         if (lower.contains("viễn tưởng") || lower.contains("sci-fi") || lower.contains("vũ trụ") || lower.contains("tương lai") || lower.contains("khoa học")) {
             List<Movie> list = getDiscoverMovies(apiKey, "878");
             return new ChatMessage("🚀 Đưa bạn du hành xuyên không gian và khám phá công nghệ tương lai qua những kiệt tác viễn tưởng này:", false, list);
         }
 
-        // 9. Điểm cao nhất / Oscar / Hay nhất
         if (lower.contains("điểm cao") || lower.contains("hay nhất") || lower.contains("top") || lower.contains("oscar") || lower.contains("imdb") || lower.contains("kinh điển")) {
             List<Movie> list = getTopRatedList(apiKey);
             return new ChatMessage("🏆 Bảng vàng những kiệt tác điện ảnh có điểm đánh giá cao nhất mọi thời đại từ khán giả toàn cầu:", false, list);
         }
 
-        // 10. Tìm kiếm theo tên phim cụ thể (Ví dụ: "Phim Avatar", "Oppenheimer", "Spider Man")
         String queryTerm = extractMovieQuery(input);
         if (!queryTerm.isEmpty()) {
             List<Movie> searchResult = searchMoviesList(apiKey, queryTerm);
@@ -230,7 +204,6 @@ public class AiChatService {
             }
         }
 
-        // 11. Mặc định: Gợi ý các phim Hot đang thịnh hành
         List<Movie> hotList = getPopularMoviesList(apiKey);
         return new ChatMessage("🍿 Nitflex AI gợi ý cho bạn danh sách những bộ phim đang thịnh hành và được xem nhiều nhất tuần này. Bạn có thể hỏi tôi chi tiết hơn về bất kỳ thể loại nào bạn thích nhé!", false, hotList);
     }
@@ -307,3 +280,4 @@ public class AiChatService {
         mainHandler.post(() -> callback.onSuccess(message));
     }
 }
+

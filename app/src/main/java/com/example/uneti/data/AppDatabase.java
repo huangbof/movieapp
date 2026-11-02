@@ -8,14 +8,6 @@ import androidx.room.RoomDatabase;
 
 import java.util.concurrent.Executors;
 
-/**
- * Cơ sở dữ liệu Room cục bộ của ứng dụng Nitflex, bao gồm 5 bảng:
- * - User: Quản lý tài khoản người dùng và phân quyền Admin
- * - FavoriteMovie: Danh sách phim yêu thích
- * - CustomMovie: Phim tùy chỉnh do Admin quản lý
- * - HistoryMovie: Lịch sử xem phim của người dùng
- * - MovieReview: Đánh giá và bình luận phim
- */
 @Database(
         entities = {User.class, FavoriteMovie.class, CustomMovie.class, HistoryMovie.class, MovieReview.class},
         version = 4,
@@ -41,7 +33,6 @@ public abstract class AppDatabase extends RoomDatabase {
              .allowMainThreadQueries()
              .build();
 
-            // Khởi tạo tài khoản quản trị mặc định nếu chưa tồn tại
             Executors.newSingleThreadExecutor().execute(() -> {
                 if (instance.userDao().findByUsername("admin") == null) {
                     instance.userDao().insert(new User("admin", "admin123", true, System.currentTimeMillis()));
@@ -51,3 +42,4 @@ public abstract class AppDatabase extends RoomDatabase {
         return instance;
     }
 }
+

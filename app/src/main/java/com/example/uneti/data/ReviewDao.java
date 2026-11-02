@@ -22,3 +22,4 @@ public interface ReviewDao {
     @Delete
     void delete(MovieReview review);
 }
+

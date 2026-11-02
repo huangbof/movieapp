@@ -18,10 +18,6 @@ import com.example.uneti.network.Constants;
 
 import java.util.List;
 
-/**
- * Adapter hiển thị danh sách thẻ phim nhỏ nằm ngang ngay trong tin nhắn của Trợ lý AI.
- * Người dùng bấm vào thẻ phim để chuyển tới DetailActivity.
- */
 public class ChatMovieAdapter extends RecyclerView.Adapter<ChatMovieAdapter.MovieCardViewHolder> {
 
     private final List<Movie> movies;
@@ -79,3 +75,4 @@ public class ChatMovieAdapter extends RecyclerView.Adapter<ChatMovieAdapter.Movi
         }
     }
 }
+

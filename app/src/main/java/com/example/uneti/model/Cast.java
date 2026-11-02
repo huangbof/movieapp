@@ -2,9 +2,6 @@ package com.example.uneti.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Model đại diện cho một diễn viên trong phim lấy từ endpoint credits của TMDB.
- */
 public class Cast {
 
     private int id;
@@ -40,3 +37,4 @@ public class Cast {
         return profilePath;
     }
 }
+

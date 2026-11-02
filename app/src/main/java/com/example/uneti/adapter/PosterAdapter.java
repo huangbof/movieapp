@@ -18,10 +18,6 @@ import com.example.uneti.network.Constants;
 
 import java.util.List;
 
-/**
- * Adapter cho một hàng poster cuộn ngang (kiểu Netflix/FPT Play):
- * chỉ hiển thị ảnh poster + badge điểm đánh giá, không có tên phim bên dưới.
- */
 public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterViewHolder> {
 
     private final List<Movie> movieList;
@@ -76,3 +72,4 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterView
         }
     }
 }
+

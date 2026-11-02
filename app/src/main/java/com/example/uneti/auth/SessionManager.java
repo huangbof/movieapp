@@ -14,14 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Quản lý phiên đăng nhập người dùng kết hợp Room Database (bảng users)
- * và SharedPreferences (lưu token phiên và cấu hình hệ thống).
- * 
- * Tự động tạo sẵn tài khoản quản trị mặc định trong Room DB:
- * - Username: admin
- * - Password: admin123
- */
 public class SessionManager {
 
     private static final String PREFS_NAME = "movieapp_session";
@@ -64,9 +56,6 @@ public class SessionManager {
         }
     }
 
-    /**
-     * Chuyển đổi dữ liệu tài khoản cũ từ SharedPreferences (nếu có) sang Room Database.
-     */
     private void migrateLegacyUsersFromPrefs() {
         String legacyJson = prefs.getString(KEY_USERS_LEGACY, null);
         if (legacyJson != null && !legacyJson.isEmpty()) {
@@ -81,14 +70,13 @@ public class SessionManager {
                         userDao.insert(new User(uname, pwd, isAdmin, System.currentTimeMillis()));
                     }
                 }
-                // Xoá key cũ để hoàn tất di trú sang Room
+
                 prefs.edit().remove(KEY_USERS_LEGACY).apply();
             } catch (JSONException ignored) {
             }
         }
     }
 
-    /** @return true nếu đăng ký thành công, false nếu username đã tồn tại. */
     public boolean register(String username, String password) {
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return false;
@@ -106,7 +94,6 @@ public class SessionManager {
         }
     }
 
-    /** @return true nếu đăng nhập đúng tài khoản/mật khẩu trong Room DB. */
     public boolean login(String username, String password) {
         if (username == null || password == null) return false;
         User user = userDao.login(username.trim(), password.trim());
@@ -117,7 +104,6 @@ public class SessionManager {
         return false;
     }
 
-    /** Đăng nhập thông qua tài khoản Google */
     public void loginWithGoogle(String email, String displayName) {
         String username = (displayName != null && !displayName.trim().isEmpty()) ? displayName.trim() : email;
         User user = userDao.findByUsername(username);
@@ -142,7 +128,6 @@ public class SessionManager {
         return prefs.getString(KEY_LOGGED_IN_USER, null);
     }
 
-    /** Kiểm tra tài khoản hiện tại có quyền Quản trị viên (Admin) hay không */
     public boolean isAdmin() {
         String current = getCurrentUser();
         if (current == null) return false;
@@ -151,7 +136,6 @@ public class SessionManager {
         return user != null && user.isAdmin();
     }
 
-    /** Lấy danh sách tất cả tài khoản trong hệ thống từ Room DB */
     public List<UserInfo> getAllUserList() {
         List<UserInfo> result = new ArrayList<>();
         List<User> list = userDao.getAllUsers();
@@ -163,7 +147,6 @@ public class SessionManager {
         return result;
     }
 
-    /** Xóa một tài khoản (không cho phép xóa tài khoản admin gốc) */
     public boolean deleteUser(String username) {
         if ("admin".equalsIgnoreCase(username)) {
             return false;
@@ -176,7 +159,6 @@ public class SessionManager {
         return false;
     }
 
-    /** Đổi mật khẩu cho một tài khoản trong Room DB */
     public boolean updateUserPassword(String username, String newPassword) {
         if (username == null || newPassword == null || newPassword.trim().isEmpty()) {
             return false;
@@ -193,7 +175,6 @@ public class SessionManager {
         return userDao.getUserCount();
     }
 
-    /** Quản lý API Key TMDB */
     public String getCustomApiKey() {
         return prefs.getString(KEY_CUSTOM_API_KEY, null);
     }
@@ -206,7 +187,6 @@ public class SessionManager {
         }
     }
 
-    /** Quản lý API Key Gemini AI (tuỳ chọn) */
     public String getGeminiApiKey() {
         return prefs.getString(KEY_GEMINI_API_KEY, null);
     }
@@ -219,7 +199,6 @@ public class SessionManager {
         }
     }
 
-    /** Quản lý thông báo hệ thống hiển thị ở Trang chủ */
     public String getAnnouncement() {
         return prefs.getString(KEY_ANNOUNCEMENT, "");
     }
@@ -232,3 +211,4 @@ public class SessionManager {
         }
     }
 }
+

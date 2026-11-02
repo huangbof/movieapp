@@ -25,11 +25,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-/**
- * Màn hình Đăng nhập / Đăng ký:
- * - Hỗ trợ đăng nhập thông thường bằng tài khoản mật khẩu
- * - Tích hợp Đăng nhập bằng tài khoản Google (Google Sign-In) chuẩn theo tài liệu hướng dẫn.
- */
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -43,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private SignInButton btnGoogle;
     private View layoutOrGoogle;
 
-    // ActivityResultLauncher nhận kết quả trả về từ Google Sign-In
     private final ActivityResultLauncher<Intent> registerForActivityResult =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -51,18 +45,15 @@ public class LoginActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         try {
                             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                            // Thông tin email
+
                             GoogleSignInAccount account = task.getResult(ApiException.class);
-                            // Get email
+
                             String email = account.getEmail();
-                            // Get name
+
                             String name = account.getDisplayName();
-                            // Chúng ta có thể lấy ảnh của người dùng
-                            // String avatar = account.getPhotoUrl().toString();
 
                             Toast.makeText(LoginActivity.this, "email: " + email + "\nname: " + name, Toast.LENGTH_SHORT).show();
 
-                            // Lưu session và chuyển vào MainActivity
                             sessionManager.loginWithGoogle(email, name);
                             goToMain();
 
@@ -79,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Kiểm tra tài khoản Google đã đăng nhập trước đó
+
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Toast.makeText(this, "Đã đăng nhập tài khoản " + account.getEmail(), Toast.LENGTH_SHORT).show();
@@ -99,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Cấu hình Google Sign-In theo tài liệu
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -123,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
 
         btnSubmit.setOnClickListener(v -> handleSubmit());
 
-        // Bắt sự kiện bấm nút đăng nhập Google
         btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -190,3 +179,4 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 }
+

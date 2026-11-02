@@ -44,14 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Màn hình Chi tiết phim:
- * - Hiển thị thông tin phim, danh sách diễn viên (Credits)
- * - Tự động lưu vào Lịch sử xem phim (Room DB)
- * - Phát trailer qua WebView
- * - Thêm/xoá phim khỏi Yêu thích (Room DB)
- * - Đánh giá sao và viết bình luận phim của người dùng (Room DB)
- */
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_MOVIE_ID = "movie_id";
@@ -74,7 +66,6 @@ public class DetailActivity extends AppCompatActivity {
     private View layoutCast;
     private RecyclerView rvCast;
 
-    // Review components
     private final TextView[] starViews = new TextView[5];
     private int currentRating = 5;
     private TextView tvSelectedRating, btnSubmitReview, tvEmptyReviews;
@@ -285,7 +276,6 @@ public class DetailActivity extends AppCompatActivity {
 
         Glide.with(this).load(backdropUrl).into(imgBackdrop);
 
-        // Lưu vào lịch sử xem
         saveToHistory(custom.getTitle(), custom.getPosterPath(), custom.getVoteAverage());
     }
 
@@ -312,7 +302,6 @@ public class DetailActivity extends AppCompatActivity {
                 .load(Constants.IMAGE_BASE_URL + detail.getBackdropPath())
                 .into(imgBackdrop);
 
-        // Lưu vào lịch sử xem
         saveToHistory(detail.getTitle(), detail.getPosterPath(), detail.getVoteAverage());
     }
 
@@ -452,3 +441,4 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 }
+

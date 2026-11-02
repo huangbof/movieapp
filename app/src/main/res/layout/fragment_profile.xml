@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:paddingBottom="40dp">
 
-        <!-- Header Profile với Gradient và Avatar lớn -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +21,6 @@
             android:paddingBottom="24dp"
             android:paddingHorizontal="20dp">
 
-            <!-- Avatar tròn lớn có viền đỏ nổi bật -->
             <FrameLayout
                 android:layout_width="92dp"
                 android:layout_height="92dp"
@@ -38,7 +36,6 @@
                     android:textSize="44sp" />
             </FrameLayout>
 
-            <!-- Tên người dùng -->
             <TextView
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
@@ -47,7 +44,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Huy hiệu vai trò (Admin / Member VIP) -->
             <TextView
                 android:id="@+id/tvRoleBadge"
                 android:layout_width="wrap_content"
@@ -61,7 +57,6 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <!-- Email người dùng -->
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
@@ -72,7 +67,6 @@
 
         </LinearLayout>
 
-        <!-- Thống kê nhanh 3 ô ngang: Đã xem, Yêu thích, Đánh giá -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,7 +74,6 @@
             android:layout_marginHorizontal="20dp"
             android:orientation="horizontal">
 
-            <!-- Ô 1: Lịch sử xem -->
             <LinearLayout
                 android:id="@+id/btnStatHistory"
                 android:layout_width="0dp"
@@ -110,7 +103,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Ô 2: Yêu thích -->
             <LinearLayout
                 android:id="@+id/btnStatFavorite"
                 android:layout_width="0dp"
@@ -140,7 +132,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Ô 3: Đánh giá -->
             <LinearLayout
                 android:id="@+id/btnStatReview"
                 android:layout_width="0dp"
@@ -171,7 +162,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Thân trang: Các nhóm tính năng và cài đặt -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -179,7 +169,6 @@
             android:paddingHorizontal="20dp"
             android:layout_marginTop="20dp">
 
-            <!-- NHÓM 1: HOẠT ĐỘNG PHIM -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -190,7 +179,6 @@
                 android:letterSpacing="0.05"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Nút Lịch sử xem phim -->
             <LinearLayout
                 android:id="@+id/btnHistory"
                 android:layout_width="match_parent"
@@ -225,7 +213,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-            <!-- NHÓM 2: QUẢN TRỊ VIÊN (chỉ hiện khi là Admin) -->
             <LinearLayout
                 android:id="@+id/layoutAdminSection"
                 android:layout_width="match_parent"
@@ -244,7 +231,6 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Bảng điều khiển Quản trị viên -->
                 <LinearLayout
                     android:id="@+id/btnAdminPanel"
                     android:layout_width="match_parent"
@@ -279,7 +265,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Nút ĐĂNG XUẤT -->
             <TextView
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
@@ -297,3 +282,4 @@
 
     </LinearLayout>
 </ScrollView>
+

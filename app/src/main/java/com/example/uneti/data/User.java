@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Entity Room đại diện cho tài khoản người dùng trong hệ thống Nitflex.
- */
 @Entity(tableName = "users")
 public class User {
 
@@ -58,3 +55,4 @@ public class User {
         this.createdAt = createdAt;
     }
 }
+
