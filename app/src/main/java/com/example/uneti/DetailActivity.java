@@ -101,7 +101,15 @@ public class DetailActivity extends AppCompatActivity {
         rvCast = findViewById(R.id.rvCast);
         rvCast.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        View btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(btnBack, (v, windowInsets) -> {
+            androidx.core.graphics.Insets insets = windowInsets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
+            android.view.ViewGroup.MarginLayoutParams lp = (android.view.ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            lp.topMargin = insets.top + (int) (12 * getResources().getDisplayMetrics().density);
+            v.setLayoutParams(lp);
+            return windowInsets;
+        });
         btnPlayTrailer.setOnClickListener(v -> openTrailer());
         btnFavorite.setOnClickListener(v -> toggleFavorite());
         btnShare.setOnClickListener(v -> shareMovie());
